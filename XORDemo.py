@@ -1,5 +1,9 @@
 #!/usr/bin/python
 # import cython
+import sys
+from ctypes import cdll, c_int, c_bool, c_double, byref, c_ubyte
+from datetime import time
+
 import numpy as np
 import pyximport;
 
@@ -8,6 +12,13 @@ pyximport.install(setup_args={
     reload_support=True)
 
 import XOR
+
+if sys.platform.startswith("win"):
+    dwf = cdll.dwf
+elif sys.platform.startswith("darwin"):
+    dwf = cdll.LoadLibrary("/Library/Frameworks/dwf.framework/dwf")
+else:
+    dwf = cdll.LoadLibrary("libdwf.so")
 
 X = np.random.randint(2, size=(10000, 2), dtype=np.int32)
 Y = np.ones([10000]).astype(dtype=np.int32)
@@ -21,24 +32,79 @@ s = 3.9
 number_of_clauses = 2
 states = 100
 Th = 1
+hdwf = c_int()
+channel = c_int(0)
+Vwrite = 0.3
+Vread = 0.1
+nSamples = 3000
+value = True
+measure = True
+sleep_in = 0.1
+sleep_out = 2
+Rs = 5000
+AnalogOutNodeCarrier = c_int(0)
+DwfStateDone = c_ubyte(2)
 
 memristor_states = np.ones([2])
 
 
 def write_memristor(memristor_no, state):
+    while measure:
+        dwf.FDwfAnalogInConfigure(hdwf, c_int(1), c_int(1))
+        sts = c_int()
+        while True:
+            dwf.FDwfAnalogInStatus(hdwf, c_int(1), byref(sts))
+            if sts.value == DwfStateDone.value:
+                break
+            time.sleep(sleep_in)
+
+        rg = (c_double * nSamples)()
+        dwf.FDwfAnalogInStatusData(hdwf, c_int(1), rg, len(rg))  # get channel 2 data
+
+        Va = sum(rg) / len(rg)
+        R_write = ((Vwrite * Rs) / Va) - Rs
+
     if state >= 101:
         memristor_states[memristor_no] = 110  # Include Ron 10k
+        if R_write < 100000:
+            print('Ron LOW: ' + R_write)
     else:
         memristor_states[memristor_no] = 90  # Exclude Roff High
+        print('Roff HIGH: ' + R_write)
     return
 
 
 def read_memristor(memristor_no):
     state = memristor_states[memristor_no]
-    # if Rm>100000:
-    #     state = 90
-    # else:
-    #     state = 110
+    while value:
+        dwf.FDwfAnalogOutNodeOffsetSet(hdwf, channel, AnalogOutNodeCarrier, c_double(Vread))
+        dwf.FDwfAnalogOutConfigure(hdwf, channel, c_bool(True))
+        time.sleep(sleep_out)
+
+        dwf.FDwfAnalogInConfigure(hdwf, c_int(1), c_int(1))
+        sts = c_int()
+        while True:
+            dwf.FDwfAnalogInStatus(hdwf, c_int(1), byref(sts))
+            if sts.value == DwfStateDone.value:
+                break
+            time.sleep(sleep_in)
+
+        dwf.FDwfAnalogOutNodeOffsetSet(hdwf, channel, AnalogOutNodeCarrier, c_double(0))
+        dwf.FDwfAnalogOutConfigure(hdwf, channel, c_bool(True))
+        time.sleep(sleep_out)
+
+        rg = (c_double * nSamples)()
+        dwf.FDwfAnalogInStatusData(hdwf, c_int(1), rg, len(rg))  # get channel 1 data
+
+        Va_read = sum(rg) / len(rg)
+        print("Va_read: " + str(Va_read) + "V")
+
+        R_read = ((Vread * Rs) / Va_read) - Rs
+        print("R_read: " + str(R_read))
+    if R_read > 100000:
+        state = 90
+    else:
+        state = 110
     return state
 
 
