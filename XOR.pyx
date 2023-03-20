@@ -35,7 +35,7 @@ from libc.stdlib cimport rand, RAND_MAX
 cdef class TsetlinMachine:
 	cdef int number_of_clauses
 	cdef int number_of_features
-	
+
 	cdef float s
 	cdef int number_of_states
 	cdef int threshold
@@ -128,6 +128,11 @@ cdef class TsetlinMachine:
 	# Get the state of a specific automaton, indexed by clause, feature, and automaton type (include/include negated).
 	def get_state(self, int clause, int feature, int automaton_type):
 		return self.ta_state[clause,feature,automaton_type]
+
+	# Set the state of the TA
+	def set_state(self, int clause, int feature, int automaton_type, state):
+		self.ta_state[clause, feature, automaton_type] = state
+		return
 
 	# Sum up the votes for each output decision (y=0 or y = 1)
 	cdef int sum_up_clause_votes(self):
