@@ -27,14 +27,18 @@ memristor_states = np.ones([2])
 
 def write_memristor(memristor_no, state):
     if state >= 101:
-        memristor_states[memristor_no] = 110  # Include
+        memristor_states[memristor_no] = 110  # Include Ron 10k
     else:
-        memristor_states[memristor_no] = 90  # Exclude
+        memristor_states[memristor_no] = 90  # Exclude Roff High
     return
 
 
 def read_memristor(memristor_no):
     state = memristor_states[memristor_no]
+    # if Rm>100000:
+    #     state = 90
+    # else:
+    #     state = 110
     return state
 
 
@@ -82,7 +86,7 @@ clause = 0
 feature = 0
 tatype = 0
 memristor_no = 0
-tsetlin_machine.set_state(clause, feature, tatype, memristor_states[memristor_no])
+tsetlin_machine.set_state(clause, feature, tatype, read_memristor(memristor_no))
 print('Clause', clause + 1),
 print('feature %d TA %d State %d' % (feature, tatype + 1, tsetlin_machine.get_state(clause, feature, tatype)))
 
@@ -90,7 +94,7 @@ clause = 0
 feature = 0
 tatype = 1
 memristor_no = 1
-tsetlin_machine.set_state(clause, feature, tatype, memristor_states[memristor_no])
+tsetlin_machine.set_state(clause, feature, tatype, read_memristor(memristor_no))
 print('Clause', clause + 1),
 print('feature %d TA %d State %d' % (feature, tatype + 1, tsetlin_machine.get_state(clause, feature, tatype)))
 
