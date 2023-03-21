@@ -2,7 +2,9 @@
 # import cython
 import sys
 from ctypes import cdll, c_int, c_bool, c_double, byref, c_ubyte
-from datetime import time
+import time
+from datetime import datetime
+from dwfconstants import *
 
 import numpy as np
 import pyximport;
@@ -34,7 +36,6 @@ states = 100
 Th = 1
 hdwf = c_int()
 channel = c_int(0)
-Vwrite = 0.3
 Vread = 0.1
 nSamples = 3000
 value = True
@@ -44,38 +45,105 @@ sleep_out = 2
 Rs = 5000
 AnalogOutNodeCarrier = c_int(0)
 DwfStateDone = c_ubyte(2)
+DwfAnalogOutIdleOffset = c_int(1)
+funcDC = c_ubyte(0)
+
 
 memristor_states = np.ones([2])
 
+version = create_string_buffer(16)
+dwf.FDwfGetVersion(version)
+print("DWF Version: "+str(version.value))
 
-def write_memristor(memristor_no, state):
-    while measure:
-        dwf.FDwfAnalogInConfigure(hdwf, c_int(1), c_int(1))
-        sts = c_int()
-        while True:
-            dwf.FDwfAnalogInStatus(hdwf, c_int(1), byref(sts))
-            if sts.value == DwfStateDone.value:
-                break
-            time.sleep(sleep_in)
+dwf.FDwfParamSet(DwfParamOnClose, c_int(0)) # 0 = run, 1 = stop, 2 = shutdown
 
-        rg = (c_double * nSamples)()
-        dwf.FDwfAnalogInStatusData(hdwf, c_int(1), rg, len(rg))  # get channel 2 data
+#open device
+print("Opening first device...")
+dwf.FDwfDeviceOpen(c_int(-1), byref(hdwf))
 
-        Va = sum(rg) / len(rg)
-        R_write = ((Vwrite * Rs) / Va) - Rs
 
+if hdwf.value == hdwfNone.value:
+    print("failed to open device")
+    quit()
+
+dwf.FDwfDeviceAutoConfigureSet(hdwf, c_int(0))
+
+def write_memristor(memristor_no, state): # เบอร์เมมริสเตอร์ (1 หรือ 2)
     if state >= 101:
-        memristor_states[memristor_no] = 110  # Include Ron 10k
-        if R_write < 100000:
-            print('Ron LOW: ' + R_write)
+        Vwrite = 0.3
+        channel = memristor_no
+        dwf.FDwfAnalogOutNodeEnableSet(hdwf, channel, AnalogOutNodeCarrier, c_bool(True))
+        dwf.FDwfAnalogOutIdleSet(hdwf, channel, DwfAnalogOutIdleOffset)
+        dwf.FDwfAnalogOutNodeFunctionSet(hdwf, channel, AnalogOutNodeCarrier, funcDC)
+        dwf.FDwfAnalogOutNodeFrequencySet(hdwf, channel, AnalogOutNodeCarrier, c_double(0))  # low frequency
+        dwf.FDwfAnalogOutNodeAmplitudeSet(hdwf, channel, AnalogOutNodeCarrier, c_double(0))
+        dwf.FDwfAnalogOutNodeOffsetSet(hdwf, channel, AnalogOutNodeCarrier, c_double(Vwrite))
+
+        dwf.FDwfAnalogInChannelRangeSet(hdwf, c_int(-1), c_double(1))  # Set range for all channels
+        dwf.FDwfAnalogInFrequencySet(hdwf, c_double(1000000))
+        dwf.FDwfAnalogInBufferSizeSet(hdwf, c_int(nSamples))
+
+        dwf.FDwfAnalogOutConfigure(hdwf, channel, c_bool(True))  # ส่ง 0.3
+        while measure:
+            dwf.FDwfAnalogInConfigure(hdwf, c_int(1), c_int(1)) # อ่าน Va กลับ
+            sts = c_int()
+            while True:
+                dwf.FDwfAnalogInStatus(hdwf, c_int(1), byref(sts))
+                if sts.value == DwfStateDone.value:
+                    break
+                time.sleep(sleep_in)
+
+            rg = (c_double * nSamples)()
+            dwf.FDwfAnalogInStatusData(hdwf, channel, rg, len(rg))
+
+            Va = sum(rg) / len(rg)
+            R_write = ((Vwrite * Rs) / Va) - Rs  # คำนวณ Rm
+            print('Rwrite : ' + str(R_write))
+            if R_write < 50000:   # เช็ค Rm < 50k ถ้าใช่ก็ break ไม่ใช่ก็เขียนต่อ
+                print('R : ' + str(R_write))
+                break
+            else:
+                continue
+
     else:
-        memristor_states[memristor_no] = 90  # Exclude Roff High
-        print('Roff HIGH: ' + R_write)
-    return
+        Vwrite = -0.3
+        channel = memristor_no
+        dwf.FDwfAnalogOutNodeEnableSet(hdwf, channel, AnalogOutNodeCarrier, c_bool(True))
+        dwf.FDwfAnalogOutIdleSet(hdwf, channel, DwfAnalogOutIdleOffset)
+        dwf.FDwfAnalogOutNodeFunctionSet(hdwf, channel, AnalogOutNodeCarrier, funcDC)
+        dwf.FDwfAnalogOutNodeFrequencySet(hdwf, channel, AnalogOutNodeCarrier, c_double(0)) # low frequency
+        dwf.FDwfAnalogOutNodeAmplitudeSet(hdwf, channel, AnalogOutNodeCarrier, c_double(0))
+        dwf.FDwfAnalogOutNodeOffsetSet(hdwf, channel, AnalogOutNodeCarrier, c_double(Vwrite))
+
+        dwf.FDwfAnalogInChannelRangeSet(hdwf, c_int(-1), c_double(1)) #Set range for all channels
+        dwf.FDwfAnalogInFrequencySet(hdwf, c_double(1000000))
+        dwf.FDwfAnalogInBufferSizeSet(hdwf, c_int(nSamples))
+
+        dwf.FDwfAnalogOutConfigure(hdwf, channel, c_bool(True))  # ส่ง -0.3
+        while measure:
+            dwf.FDwfAnalogInConfigure(hdwf, c_int(1), c_int(1)) # อ่าน Va กลับ
+            sts = c_int()
+            while True:
+                dwf.FDwfAnalogInStatus(hdwf, c_int(1), byref(sts))
+                if sts.value == DwfStateDone.value:
+                    break
+                time.sleep(sleep_in)
+
+            rg = (c_double * nSamples)()
+            dwf.FDwfAnalogInStatusData(hdwf, channel, rg, len(rg))  # get channel 2 data
+
+            Va = sum(rg) / len(rg)
+            R_write = ((Vwrite * Rs) / Va) - Rs  # คำนวณ Rm
+            print('Rwrite : ' + str(R_write))
+            if R_write > 50000:
+                print('Roff : ' + str(R_write)) # เช็ค Rm > 50k ถ้าใช่ก็ break ไม่ใช่ก็เขียนต่อ
+                break
+            else:
+                continue
 
 
 def read_memristor(memristor_no):
-    state = memristor_states[memristor_no]
+    channel = memristor_no
     while value:
         dwf.FDwfAnalogOutNodeOffsetSet(hdwf, channel, AnalogOutNodeCarrier, c_double(Vread))
         dwf.FDwfAnalogOutConfigure(hdwf, channel, c_bool(True))
@@ -95,16 +163,18 @@ def read_memristor(memristor_no):
 
         rg = (c_double * nSamples)()
         dwf.FDwfAnalogInStatusData(hdwf, c_int(1), rg, len(rg))  # get channel 1 data
+        print('Vread: '+ str(Vread))
 
         Va_read = sum(rg) / len(rg)
-        print("Va_read: " + str(Va_read) + "V")
+        print("Va_read: " + str(Va_read) + " V")
 
         R_read = ((Vread * Rs) / Va_read) - Rs
         print("R_read: " + str(R_read))
-    if R_read > 100000:
+    if R_read > 50000:
         state = 90
     else:
         state = 110
+        print('state: '+ str(state))
     return state
 
 
