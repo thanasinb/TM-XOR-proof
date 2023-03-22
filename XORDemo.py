@@ -229,6 +229,7 @@ tsetlin_machine.set_state(clause, feature, tatype, read_memristor(memristor_no))
 print('Clause', clause + 1),
 print('feature %d TA %d State %d' % (feature, tatype + 1, tsetlin_machine.get_state(clause, feature, tatype)))
 
+
 clause = 0
 feature = 0
 tatype = 1
