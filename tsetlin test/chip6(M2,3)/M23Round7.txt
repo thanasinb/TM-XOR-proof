@@ -1,0 +1,109 @@
+Opening first device...
+V_write : -0.3
+Va_write : -0.0152846039517967
+R_write : 93137.96973284843
+ 
+Clause 1
+feature 0 TA 1 State 91
+V_write : 0.3
+Va_write : 0.013169369403620441
+R_write : 108900.67011011395
+ 
+V_write : 0.3
+Va_write : 0.021073120485381295
+R_write : 66180.72527704523
+ 
+V_write : 0.3
+Va_write : 0.022847637794824224
+R_write : 60652.30127815671
+ 
+V_write : 0.3
+Va_write : 0.023838530033825387
+R_write : 57923.342918862596
+ 
+V_write : 0.3
+Va_write : 0.02450134162098713
+R_write : 56221.137323971845
+ 
+V_write : 0.3
+Va_write : 0.025168143378238653
+R_write : 54599.151890439316
+ 
+V_write : 0.3
+Va_write : 0.025468182001390234
+R_write : 53897.01903018124
+ 
+V_write : 0.3
+Va_write : 0.025726878028887696
+R_write : 53304.78141637354
+ 
+V_write : 0.3
+Va_write : 0.02612245905808156
+R_write : 52421.85284566239
+ 
+V_write : 0.3
+Va_write : 0.026223210852852452
+R_write : 52201.23322872326
+ 
+V_write : 0.3
+Va_write : 0.02650573706283148
+R_write : 51591.52192011378
+ 
+V_write : 0.3
+Va_write : 0.026611587408272883
+R_write : 51366.42327972089
+ 
+V_write : 0.3
+Va_write : 0.02661480171195643
+R_write : 51359.61583460306
+ 
+V_write : 0.3
+Va_write : 0.026769088288767263
+R_write : 51034.78100632303
+ 
+V_write : 0.3
+Va_write : 0.026674432587189354
+R_write : 51233.62353058595
+ 
+V_write : 0.3
+Va_write : 0.02655505999866544
+R_write : 51486.40974922988
+ 
+V_write : 0.3
+Va_write : 0.02699974228757722
+R_write : 50556.08583309186
+ 
+V_write : 0.3
+Va_write : 0.02748820560942022
+R_write : 49568.85841562351
+ 
+Clause 1
+feature 0 TA 2 State 107
+V_read: 0.1
+Va_read: 0.005485469998876978 V
+R_read: 86149.89237063794
+state_read: 90
+ 
+Clause 1
+feature 0 TA 1 State 90
+V_read: 0.1
+Va_read: 0.007203843443046901 V
+R_read: 64407.3939769744
+state_read: 90
+ 
+Clause 1
+feature 0 TA 2 State 90
+ 
+Accuracy on test data (no noise): 0.742
+Clause 1
+feature 0 TA 1 State 90
+feature 0 TA 2 State 90
+feature 1 TA 1 State 106
+feature 1 TA 2 State 96
+/n
+Clause 2
+feature 0 TA 1 State 105
+feature 0 TA 2 State 93
+feature 1 TA 1 State 92
+feature 1 TA 2 State 105
+/n

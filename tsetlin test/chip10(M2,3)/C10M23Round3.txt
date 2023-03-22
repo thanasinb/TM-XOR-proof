@@ -1,0 +1,217 @@
+Opening first device...
+V_write : 0.3
+Va_write : 0.0012521732788463014
+R_write : 1192917.2733841082
+ 
+V_write : 0.3
+Va_write : 0.0012640431723052769
+R_write : 1181668.3297409858
+ 
+V_write : 0.3
+Va_write : 0.0012394075443715477
+R_write : 1205255.663532037
+ 
+V_write : 0.3
+Va_write : 0.0012186912208818179
+R_write : 1225828.592426089
+ 
+V_write : 0.3
+Va_write : 0.0012852074163028889
+R_write : 1162126.7851184655
+ 
+V_write : 0.3
+Va_write : 0.0013266400632823408
+R_write : 1125675.9395526894
+ 
+V_write : 0.3
+Va_write : 0.001415888224478629
+R_write : 1054405.6607486396
+ 
+V_write : 0.3
+Va_write : 0.0012762490061451715
+R_write : 1170319.230634039
+ 
+V_write : 0.3
+Va_write : 0.0013114107660142282
+R_write : 1138806.3792620455
+ 
+V_write : 0.3
+Va_write : 0.0014139845623201116
+R_write : 1055831.949635116
+ 
+V_write : 0.3
+Va_write : 0.001311970666649084
+R_write : 1138318.2449354324
+ 
+V_write : 0.3
+Va_write : 0.0013890129940054697
+R_write : 1074903.5044837696
+ 
+V_write : 0.3
+Va_write : 0.0014763574930432366
+R_write : 1011014.079969228
+ 
+V_write : 0.3
+Va_write : 0.001371208153817
+R_write : 1088925.817042792
+ 
+V_write : 0.3
+Va_write : 0.0013951719009889043
+R_write : 1070136.3319006017
+ 
+V_write : 0.3
+Va_write : 0.0014046902117814725
+R_write : 1062851.1086780143
+ 
+V_write : 0.3
+Va_write : 0.0015211495438318314
+R_write : 981096.3414691268
+ 
+V_write : 0.3
+Va_write : 0.0014998733197072425
+R_write : 995084.4606615058
+ 
+V_write : 0.3
+Va_write : 0.0014049141720354212
+R_write : 1062680.8803393447
+ 
+V_write : 0.3
+Va_write : 0.0014247346545093716
+R_write : 1047827.6232015619
+ 
+V_write : 0.3
+Va_write : 0.001381734285752325
+R_write : 1080592.226716211
+ 
+V_write : 0.3
+Va_write : 0.0015530638800187117
+R_write : 960832.7769376284
+ 
+V_write : 0.3
+Va_write : 0.0015379465628775565
+R_write : 970326.4750586932
+ 
+V_write : 0.3
+Va_write : 0.0016081581024886837
+R_write : 927744.1112156167
+ 
+V_write : 0.3
+Va_write : 0.0016685153909263197
+R_write : 894002.7950339948
+ 
+V_write : 0.3
+Va_write : 0.0017187944679365238
+R_write : 867704.6938897851
+ 
+V_write : 0.3
+Va_write : 0.0016726586556242665
+R_write : 891775.9171641466
+ 
+V_write : 0.3
+Va_write : 0.001987098852160232
+R_write : 749869.3404806242
+ 
+V_write : 0.3
+Va_write : 0.001982731627208348
+R_write : 751532.0386359975
+ 
+V_write : 0.3
+Va_write : 0.0023651437608160158
+R_write : 629210.9197973124
+ 
+V_write : 0.3
+Va_write : 0.0029268360777051014
+R_write : 507498.807646287
+ 
+V_write : 0.3
+Va_write : 0.0035221224326856576
+R_write : 420879.5736570217
+ 
+V_write : 0.3
+Va_write : 0.003914948718101681
+R_write : 378146.78122459154
+ 
+V_write : 0.3
+Va_write : 0.0038847140838193677
+R_write : 381128.8032104623
+ 
+V_write : 0.3
+Va_write : 0.004018866275931236
+R_write : 368239.58972793294
+ 
+V_write : 0.3
+Va_write : 0.0042300607953995135
+R_write : 349604.83254315273
+ 
+V_write : 0.3
+Va_write : 0.005753326462592843
+R_write : 255718.73545726054
+ 
+V_write : 0.3
+Va_write : 0.005378528977619187
+R_write : 273886.6632943153
+ 
+V_write : 0.3
+Va_write : 0.004984694871060471
+R_write : 295921.12733088556
+ 
+V_write : 0.3
+Va_write : 0.0051814439541492865
+R_write : 284494.5913288909
+ 
+V_write : 0.3
+Va_write : 0.00519219404633861
+R_write : 283895.2120458129
+ 
+V_write : 0.3
+Va_write : 0.005133068539297677
+R_write : 287222.8660140265
+ 
+V_write : 0.3
+Va_write : 0.006154999178039705
+R_write : 238704.33798786183
+ 
+V_write : 0.3
+Va_write : 0.006991154786135829
+R_write : 209556.82871943453
+ 
+V_write : 0.3
+Va_write : 0.0473579749170772
+R_write : 26673.651642125064
+ 
+Clause 1
+feature 0 TA 1 State 103
+V_write : -0.3
+Va_write : -0.016618580374464034
+R_write : 85260.41732811829
+ 
+Clause 1
+feature 0 TA 2 State 100
+V_read: 0.1
+Va_read: 0.008946551763312228 V
+R_read: 50887.45398538755
+state_read: 90
+ 
+Clause 1
+feature 0 TA 1 State 90
+V_read: 0.1
+Va_read: 0.0013853995855107573 V
+R_read: 355906.7053500411
+state_read: 90
+ 
+Clause 1
+feature 0 TA 2 State 90
+ 
+Accuracy on test data (no noise): 0.76
+Clause 1
+feature 0 TA 1 State 90
+feature 0 TA 2 State 90
+feature 1 TA 1 State 94
+feature 1 TA 2 State 102
+/n
+Clause 2
+feature 0 TA 1 State 95
+feature 0 TA 2 State 115
+feature 1 TA 1 State 113
+feature 1 TA 2 State 93
+/n

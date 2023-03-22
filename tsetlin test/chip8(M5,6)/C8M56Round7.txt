@@ -1,0 +1,49 @@
+Opening first device...
+V_write : -0.3
+Va_write : -0.03827703550234755
+R_write : 34187.987792523905
+ 
+V_write : -0.3
+Va_write : -0.002254148456885359
+R_write : 660439.7563825969
+ 
+Clause 1
+feature 0 TA 1 State 98
+V_write : 0.3
+Va_write : 0.0019852551556981124
+R_write : 750570.3838343776
+ 
+V_write : 0.3
+Va_write : 0.0754712201595645
+R_write : 14875.125866901784
+ 
+Clause 1
+feature 0 TA 2 State 108
+V_read: 0.1
+Va_read: -1.5665718725059655e-05 V
+R_read: -31921824.805501927
+state_read: 110
+ 
+Clause 1
+feature 0 TA 1 State 110
+V_read: 0.1
+Va_read: 0.01305642542246346 V
+R_read: 33295.32079582476
+state_read: 110
+ 
+Clause 1
+feature 0 TA 2 State 110
+ 
+Accuracy on test data (no noise): 0.749
+Clause 1
+feature 0 TA 1 State 110
+feature 0 TA 2 State 110
+feature 1 TA 1 State 108
+feature 1 TA 2 State 92
+/n
+Clause 2
+feature 0 TA 1 State 107
+feature 0 TA 2 State 95
+feature 1 TA 1 State 87
+feature 1 TA 2 State 102
+/n

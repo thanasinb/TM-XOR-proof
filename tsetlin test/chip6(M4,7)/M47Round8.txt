@@ -1,0 +1,129 @@
+Opening first device...
+V_write : -0.3
+Va_write : -0.0017932382542706646
+R_write : 831475.5750819466
+ 
+Clause 1
+feature 0 TA 1 State 97
+V_write : 0.3
+Va_write : 0.01781115643685617
+R_write : 79216.87863546515
+ 
+V_write : 0.3
+Va_write : 0.023359044594684596
+R_write : 59214.955107424576
+ 
+V_write : 0.3
+Va_write : 0.02395657256565262
+R_write : 57613.297285714514
+ 
+V_write : 0.3
+Va_write : 0.024369555169961123
+R_write : 56552.21092623633
+ 
+V_write : 0.3
+Va_write : 0.024787303810765902
+R_write : 55514.85112908904
+ 
+V_write : 0.3
+Va_write : 0.024762586923819892
+R_write : 55575.25429853631
+ 
+V_write : 0.3
+Va_write : 0.02499900450164856
+R_write : 55002.38929118487
+ 
+V_write : 0.3
+Va_write : 0.02513733039809968
+R_write : 54672.207678560655
+ 
+V_write : 0.3
+Va_write : 0.025475829827395914
+R_write : 53879.33818693304
+ 
+V_write : 0.3
+Va_write : 0.025859218670203892
+R_write : 53006.39296686735
+ 
+V_write : 0.3
+Va_write : 0.025814883446982365
+R_write : 53106.01481430832
+ 
+V_write : 0.3
+Va_write : 0.025958640408278125
+R_write : 52784.22815709774
+ 
+V_write : 0.3
+Va_write : 0.026157151370252412
+R_write : 52345.69406154433
+ 
+V_write : 0.3
+Va_write : 0.02617067361333496
+R_write : 52316.06385690021
+ 
+V_write : 0.3
+Va_write : 0.02637860581024389
+R_write : 51864.263820095024
+ 
+V_write : 0.3
+Va_write : 0.0265218085812493
+R_write : 51557.228946312796
+ 
+V_write : 0.3
+Va_write : 0.02659895186965476
+R_write : 51393.19952720638
+ 
+V_write : 0.3
+Va_write : 0.026681969575137028
+R_write : 51217.73894074671
+ 
+V_write : 0.3
+Va_write : 0.026942660687679573
+R_write : 50673.78876897354
+ 
+V_write : 0.3
+Va_write : 0.027140728297421618
+R_write : 50267.49258760682
+ 
+V_write : 0.3
+Va_write : 0.02719459559363582
+R_write : 50158.018247972606
+ 
+V_write : 0.3
+Va_write : 0.027078658984911495
+R_write : 50394.175938912456
+ 
+V_write : 0.3
+Va_write : 0.027331037243100008
+R_write : 49882.65910503232
+ 
+Clause 1
+feature 0 TA 2 State 106
+V_read: 0.1
+Va_read: -2.7311651930095906e-05 V
+R_read: -18312204.605556212
+state_read: 110
+ 
+Clause 1
+feature 0 TA 1 State 110
+V_read: 0.1
+Va_read: 0.007698181181966869 V
+R_read: 59950.4068793885
+state_read: 90
+ 
+Clause 1
+feature 0 TA 2 State 90
+ 
+Accuracy on test data (no noise): 0.495
+Clause 1
+feature 0 TA 1 State 110
+feature 0 TA 2 State 90
+feature 1 TA 1 State 105
+feature 1 TA 2 State 91
+/n
+Clause 2
+feature 0 TA 1 State 108
+feature 0 TA 2 State 95
+feature 1 TA 1 State 93
+feature 1 TA 2 State 110
+/n
