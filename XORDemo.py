@@ -43,11 +43,6 @@ measure = True
 sleep_in = 0.1
 sleep_out = 2
 Rs = 5000
-AnalogOutNodeCarrier = c_int(0)
-DwfStateDone = c_ubyte(2)
-DwfAnalogOutIdleOffset = c_int(1)
-funcDC = c_ubyte(0)
-
 
 memristor_states = np.ones([2])
 
@@ -98,12 +93,15 @@ def write_memristor(memristor_no, state): # เบอร์เมมริสเ
 
             Va = sum(rg) / len(rg)
             R_write = ((Vwrite * Rs) / Va) - Rs  # คำนวณ Rm
-            print('Rwrite : ' + str(R_write))
+            print('V_write : ' + str(Vwrite))
+            print('Va_write : ' + str(Va))
+            print('R_write : ' + str(R_write))
+            print(' ')
             if R_write < 50000:   # เช็ค Rm < 50k ถ้าใช่ก็ break ไม่ใช่ก็เขียนต่อ
-                print('R : ' + str(R_write))
+                dwf.FDwfAnalogOutNodeOffsetSet(hdwf, channel, AnalogOutNodeCarrier, c_double(0))
+                dwf.FDwfAnalogOutConfigure(hdwf, channel, c_bool(True))
                 break
-            else:
-                continue
+
 
     else:
         Vwrite = -0.3
@@ -134,47 +132,52 @@ def write_memristor(memristor_no, state): # เบอร์เมมริสเ
 
             Va = sum(rg) / len(rg)
             R_write = ((Vwrite * Rs) / Va) - Rs  # คำนวณ Rm
-            print('Rwrite : ' + str(R_write))
+            print('V_write : ' + str(Vwrite))
+            print('Va_write : ' + str(Va))
+            print('R_write : ' + str(R_write))
+            print(' ')
             if R_write > 50000:
-                print('Roff : ' + str(R_write)) # เช็ค Rm > 50k ถ้าใช่ก็ break ไม่ใช่ก็เขียนต่อ
+                dwf.FDwfAnalogOutNodeOffsetSet(hdwf, channel, AnalogOutNodeCarrier, c_double(0))
+                dwf.FDwfAnalogOutConfigure(hdwf, channel, c_bool(True))
                 break
-            else:
-                continue
+
 
 
 def read_memristor(memristor_no):
     channel = memristor_no
-    while value:
-        dwf.FDwfAnalogOutNodeOffsetSet(hdwf, channel, AnalogOutNodeCarrier, c_double(Vread))
-        dwf.FDwfAnalogOutConfigure(hdwf, channel, c_bool(True))
-        time.sleep(sleep_out)
+    # while value:
+    dwf.FDwfAnalogOutNodeOffsetSet(hdwf, channel, AnalogOutNodeCarrier, c_double(Vread))
+    dwf.FDwfAnalogOutConfigure(hdwf, channel, c_bool(True))
+    time.sleep(sleep_out)
 
-        dwf.FDwfAnalogInConfigure(hdwf, c_int(1), c_int(1))
-        sts = c_int()
-        while True:
-            dwf.FDwfAnalogInStatus(hdwf, c_int(1), byref(sts))
-            if sts.value == DwfStateDone.value:
-                break
-            time.sleep(sleep_in)
+    dwf.FDwfAnalogInConfigure(hdwf, c_int(1), c_int(1))
+    sts = c_int()
+    while True:
+        dwf.FDwfAnalogInStatus(hdwf, c_int(1), byref(sts))
+        if sts.value == DwfStateDone.value:
+            break
+        time.sleep(sleep_in)
 
-        dwf.FDwfAnalogOutNodeOffsetSet(hdwf, channel, AnalogOutNodeCarrier, c_double(0))
-        dwf.FDwfAnalogOutConfigure(hdwf, channel, c_bool(True))
-        time.sleep(sleep_out)
+    rg = (c_double * nSamples)()
+    dwf.FDwfAnalogInStatusData(hdwf, channel, rg, len(rg))  # get channel 1 data
+    dwf.FDwfAnalogOutNodeOffsetSet(hdwf, channel, AnalogOutNodeCarrier, c_double(0))
+    dwf.FDwfAnalogOutConfigure(hdwf, channel, c_bool(True))
 
-        rg = (c_double * nSamples)()
-        dwf.FDwfAnalogInStatusData(hdwf, c_int(1), rg, len(rg))  # get channel 1 data
-        print('Vread: '+ str(Vread))
+    Va_read = sum(rg) / len(rg)
 
-        Va_read = sum(rg) / len(rg)
-        print("Va_read: " + str(Va_read) + " V")
+    R_read = ((Vread * Rs) / Va_read) - Rs
 
-        R_read = ((Vread * Rs) / Va_read) - Rs
-        print("R_read: " + str(R_read))
+    print('V_read: ' + str(Vread))
+    print("Va_read: " + str(Va_read) + " V")
+    print("R_read: " + str(R_read))
+
     if R_read > 50000:
         state = 90
     else:
         state = 110
-        print('state: '+ str(state))
+    print('state_read: '+ str(state))
+    print(' ')
+
     return state
 
 
@@ -235,7 +238,7 @@ print('Clause', clause + 1),
 print('feature %d TA %d State %d' % (feature, tatype + 1, tsetlin_machine.get_state(clause, feature, tatype)))
 
 # Some performacne statistics
-
+print(' ')
 print("Accuracy on test data (no noise):", tsetlin_machine.evaluate(X_test, y_test, y_test.shape[0]))
 
 for clause in range(number_of_clauses):
