@@ -19,7 +19,22 @@ s = 3.9
 number_of_clauses = 2
 states = 100 
 Th = 1
+# position_m_array = 0
+shape = (2,2,2)
 
+#############################
+### memristor_array new!!!###
+#############################
+
+# xyz = XOR.TsetlinMachine(1,1,1,1,1,1, size=(2, 2, 2))
+xyz = XOR.TsetlinMachine(0,0,0,0,0,0, shape)
+xyz_array = xyz.get_memristor_state()
+
+# แสดงแบบ List
+# print("m_array", np.array(xyz_array).tolist())
+print("m_array\n", np.array(xyz_array), "\n")
+
+##################################################
 
 # Parameters of the pattern recognition problem
 number_of_features = 2
@@ -39,7 +54,7 @@ X_test = X[NoOfTrainingSamples:NoOfTrainingSamples+NoOfTestingSamples,:] # Input
 y_test = Y[NoOfTrainingSamples:NoOfTrainingSamples+NoOfTestingSamples] # Target value
 
 # This is a multiclass variant of the Tsetlin Machine, capable of distinguishing between multiple classes
-tsetlin_machine = XOR.TsetlinMachine(number_of_clauses, number_of_features, states, s, T, Th)
+tsetlin_machine = XOR.TsetlinMachine(number_of_clauses, number_of_features, states, s, T, Th, shape)
 
 # Training of the Tsetlin Machine in batch mode. The Tsetlin Machine can also be trained online
 tsetlin_machine.fit(X_training, y_training, y_training.shape[0], epochs=epochs)

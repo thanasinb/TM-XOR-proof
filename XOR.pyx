@@ -40,6 +40,7 @@ cdef class TsetlinMachine:
 	cdef int number_of_states
 	cdef int threshold
 	cdef int Th
+	# cdef int position_m_array
 
 	cdef int[:,:,:] ta_state
 	
@@ -49,8 +50,12 @@ cdef class TsetlinMachine:
 
 	cdef int[:] feedback_to_clauses
 
+	cdef float[:,:,:] memristor_state
+
+	cdef float[:,:,:] tm_state
+
 	# Initialization of the Tsetlin Machine
-	def __init__(self, number_of_clauses, number_of_features, number_of_states, s, threshold, Th):
+	def __init__(self, number_of_clauses, number_of_features, number_of_states, s, threshold, Th, shape):
 		cdef int j
 
 		self.number_of_clauses = number_of_clauses
@@ -59,9 +64,21 @@ cdef class TsetlinMachine:
 		self.s = s
 		self.threshold = threshold
 		self.Th = Th
+		# self.position_m_array = position_m_array
 
 		# The state of each Tsetlin Automaton is stored here. The automata are randomly initialized to either 'number_of_states' or 'number_of_states' + 1.
 		self.ta_state = np.random.choice([self.number_of_states, self.number_of_states+1], size=(self.number_of_clauses, self.number_of_features, 2)).astype(dtype=np.int32)
+
+		#############################
+		### memristor_array new!!!###
+		#############################
+
+		# self.m_array = np.zeros((2,2,2), dtype=np.int32)
+		# self.m_array = np.round(np.random.rand(*size), 3).astype(np.float32)
+		self.memristor_state = np.random.choice([0.5, 0.505], size=shape).astype(np.float32)
+		# print("m_array in __init__:", np.array(self.m_array).tolist())
+
+		############################################################################
 
 		# Data structure for keeping track of the sign of each clause
 		self.clause_sign = np.zeros(self.number_of_clauses, dtype=np.int32)
@@ -77,6 +94,14 @@ cdef class TsetlinMachine:
 			else:
 				self.clause_sign[j] = 1
 
+	def get_ta_state(self):
+		return self.ta_state
+
+	def get_memristor_state(self):
+		return self.memristor_state
+
+	def get_tm_state(self):
+		return self.tm_state
 
 	# Calculate the output of each clause using the actions of each Tsetline Automaton.
 	# Output is stored an internal output array.
