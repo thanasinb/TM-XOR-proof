@@ -58,7 +58,7 @@ tsetlin_machine = XOR.TsetlinMachine(number_of_clauses, number_of_features, stat
 # Training of the Tsetlin Machine in batch mode. The Tsetlin Machine can also be trained online
 tsetlin_machine.fit(X_training, y_training, y_training.shape[0], epochs=epochs)
 
-# Some performacne statistics
+# Some performance statistics
 
 print("Accuracy on test data (no noise):", tsetlin_machine.evaluate(X_test, y_test, y_test.shape[0]))
 
