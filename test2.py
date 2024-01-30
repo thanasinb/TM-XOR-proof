@@ -9,14 +9,29 @@
 # your_object = YourClass(1, 1, 1, 1, 1, 1)
 
 ##########################################
-import numpy as np
+# import numpy as np
+#
+# # สุ่มตัวเลข 0.5 หรือ 0.505
+# random_array = np.random.choice([0.5, 0.505], size=(2, 2, 2))
+#
+# print(random_array)
 
-# สุ่มตัวเลข 0.5 หรือ 0.505
-random_array = np.random.choice([0.5, 0.505], size=(2, 2, 2))
+#####################################
+# main.py
 
-print(random_array)
+from memristor_demo import Memristor
+
+shape = (2, 2, 2)
+# mode = 1
+
+# สร้างอ็อบเจ็กต์ Memristor และดึง memristor_array
+memristor_obj = Memristor(shape)
+memristor_array = memristor_obj.get_memristor_array()
 
 
-
+print("Memristor Array:")
+print(memristor_array[0])
+print("\nini_exclude:")
+print(memristor_array[1])
 
 

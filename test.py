@@ -14,7 +14,7 @@
 # print(result)
 # print(f"Result after adding {value_to_add}: {result}")
 
-# # 2
+# 2 ######################################
 # import numpy as np
 #
 # # สร้าง m_array ขนาด 2x2x2 ที่มีรูปแบบข้อมูลเป็น 32 บิต (float32)
@@ -24,11 +24,11 @@
 # print("m_array_float32:")
 # print(m_array_float32)
 
-# 3
+# 3 #############################################
 # ในโปรแกรมหลัก
 
-from memritor import Memristor
-import memritor
+from memristor_demo import Memristor
+import memristor_demo
 
 # สร้างอ็อบเจ็กต์ Memristor โดยระบุขนาดของ m_array
 memristor_obj = Memristor(size=(2, 2, 2))

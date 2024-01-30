@@ -31,7 +31,10 @@ xyz_array = xyz.get_memristor_state()
 
 # แสดงแบบ List
 # print("m_array", np.array(xyz_array).tolist())
-print("m_array\n", np.array(xyz_array), "\n")
+print("memristor_state:")
+print(np.array(xyz_array), "\n")
+print("tm_state:")
+print(np.array(xyz_array) * 200, "\n")
 
 ##################################################
 
