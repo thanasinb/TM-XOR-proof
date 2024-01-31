@@ -40,7 +40,6 @@ cdef class TsetlinMachine:
 	cdef int number_of_states
 	cdef int threshold
 	cdef int Th
-	# cdef int position_m_array
 
 	cdef int[:,:,:] ta_state
 	
@@ -55,7 +54,7 @@ cdef class TsetlinMachine:
 	cdef float[:,:,:] tm_state
 
 	# Initialization of the Tsetlin Machine
-	def __init__(self, number_of_clauses, number_of_features, number_of_states, s, threshold, Th, shape):
+	def __init__(self, number_of_clauses, number_of_features, number_of_states, s, threshold, Th, val, shape, cal):
 		cdef int j
 
 		self.number_of_clauses = number_of_clauses
@@ -64,7 +63,6 @@ cdef class TsetlinMachine:
 		self.s = s
 		self.threshold = threshold
 		self.Th = Th
-		# self.position_m_array = position_m_array
 
 		# The state of each Tsetlin Automaton is stored here. The automata are randomly initialized to either 'number_of_states' or 'number_of_states' + 1.
 		self.ta_state = np.random.choice([self.number_of_states, self.number_of_states+1], size=(self.number_of_clauses, self.number_of_features, 2)).astype(dtype=np.int32)
@@ -75,8 +73,8 @@ cdef class TsetlinMachine:
 
 		# self.m_array = np.zeros((2,2,2), dtype=np.int32)
 		# self.m_array = np.round(np.random.rand(*size), 3).astype(np.float32)
-		self.memristor_state = np.random.choice([0.5, 0.505], size=shape).astype(np.float32)
-		# print("m_array in __init__:", np.array(self.m_array).tolist())
+		self.memristor_state = np.random.choice(val, size=shape).astype(np.float32)
+		self.tm_state = np.array(self.memristor_state) * cal
 
 		############################################################################
 
@@ -84,11 +82,11 @@ cdef class TsetlinMachine:
 		self.clause_sign = np.zeros(self.number_of_clauses, dtype=np.int32)
 		
 		# Data structures for intermediate calculations (clause output, summation of votes, and feedback to clauses)
-		self.clause_output = np.zeros(shape=(self.number_of_clauses), dtype=np.int32)
-		self.feedback_to_clauses = np.zeros(shape=(self.number_of_clauses), dtype=np.int32)
+		self.clause_output = np.zeros(shape=self.number_of_clauses, dtype=np.int32)
+		self.feedback_to_clauses = np.zeros(shape=self.number_of_clauses, dtype=np.int32)
 
 		# Set up the Tsetlin Machine structure
-		for j in xrange(self.number_of_clauses):
+		for j in range(self.number_of_clauses):
 			if j % 2 == 0:
 				self.clause_sign[j] = 1
 			else:
@@ -108,9 +106,9 @@ cdef class TsetlinMachine:
 	cdef void calculate_clause_output(self, int[:] X):
 		cdef int j, k
 
-		for j in xrange(self.number_of_clauses):				
+		for j in range(self.number_of_clauses):				
 			self.clause_output[j] = 1
-			for k in xrange(self.number_of_features):
+			for k in range(self.number_of_features):
 				action_include = self.action(self.ta_state[j,k,0])
 				action_include_negated = self.action(self.ta_state[j,k,1])
 
@@ -160,7 +158,7 @@ cdef class TsetlinMachine:
 		cdef int j
 
 		output_sum = 0
-		for j in xrange(self.number_of_clauses):
+		for j in range(self.number_of_clauses):
 			output_sum += self.clause_output[j]*self.clause_sign[j]
 		
 		if output_sum > self.threshold:
@@ -184,12 +182,12 @@ cdef class TsetlinMachine:
 		Xi = np.zeros((self.number_of_features,), dtype=np.int32)
 
 		errors = 0
-		for l in xrange(number_of_examples):
+		for l in range(number_of_examples):
 			###############################
 			### Calculate Clause Output ###
 			###############################
 
-			for j in xrange(self.number_of_features):
+			for j in range(self.number_of_features):
 				Xi[j] = X[l,j]
 
 			self.calculate_clause_output(Xi)
@@ -237,12 +235,12 @@ cdef class TsetlinMachine:
 		#####################################
 
 		# Initialize feedback to clauses
-		for j in xrange(self.number_of_clauses):
+		for j in range(self.number_of_clauses):
 			self.feedback_to_clauses[j] = 0
 
 		if y == 1:
 			# Calculate feedback to clauses
-			for j in xrange(self.number_of_clauses):
+			for j in range(self.number_of_clauses):
 				if 1.0*rand()/RAND_MAX > 1.0*(self.threshold - output_sum)/(2*self.threshold):
 					continue
 
@@ -251,7 +249,7 @@ cdef class TsetlinMachine:
 					self.feedback_to_clauses[j] += 1
 
 		elif y == 0:
-			for j in xrange(self.number_of_clauses):
+			for j in range(self.number_of_clauses):
 				if 1.0*rand()/RAND_MAX > 1.0*(self.threshold + output_sum)/(2*self.threshold):
 					continue
 
@@ -260,14 +258,14 @@ cdef class TsetlinMachine:
 					self.feedback_to_clauses[j] -= 1
 
 	
-		for j in xrange(self.number_of_clauses):
+		for j in range(self.number_of_clauses):
 			if self.feedback_to_clauses[j] > 0:
 				#######################################################
 				### Type I Feedback (Combats False Negative Output) ###
 				#######################################################
 
 				if self.clause_output[j] == 0:		
-					for k in xrange(self.number_of_features):	
+					for k in range(self.number_of_features):	
 						if 1.0*rand()/RAND_MAX <= 1.0/self.s:								
 							if self.ta_state[j,k,0] > 1:
 								self.ta_state[j,k,0] -= 1
@@ -277,7 +275,7 @@ cdef class TsetlinMachine:
 								self.ta_state[j,k,1] -= 1
 
 				if self.clause_output[j] == 1:					
-					for k in xrange(self.number_of_features):
+					for k in range(self.number_of_features):
 						if X[k] == 1:
 							if 1.0*rand()/RAND_MAX <= 1.0*(self.s-1)/self.s:
 								if self.ta_state[j,k,0] < self.number_of_states*2:
@@ -301,7 +299,7 @@ cdef class TsetlinMachine:
 				### Type II Feedback (Combats False Positive Output) ###
 				########################################################
 				if self.clause_output[j] == 1:
-					for k in xrange(self.number_of_features):
+					for k in range(self.number_of_features):
 						action_include = self.action(self.ta_state[j,k,0])
 						action_include_negated = self.action(self.ta_state[j,k,1])
 
@@ -327,14 +325,14 @@ cdef class TsetlinMachine:
 		
 		random_index = np.arange(number_of_examples)
 
-		for epoch in xrange(epochs):	
+		for epoch in range(epochs):	
 			#np.random.shuffle(random_index)
 
-			for l in xrange(number_of_examples):
+			for l in range(number_of_examples):
 				example_id = random_index[l]
 				target_class = y[example_id]
 
-				for j in xrange(self.number_of_features):
+				for j in range(self.number_of_features):
 					Xi[j] = X[example_id,j]
 				self.update(Xi, target_class)
 				

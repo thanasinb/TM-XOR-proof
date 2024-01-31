@@ -19,22 +19,26 @@ number_of_clauses = 2
 states = 100 
 Th = 1
 # position_m_array = 0
-shape = (2, 2, 2)
 
 #########################
 # memristor_array new!!!#
 #########################
 
-# xyz = XOR.TsetlinMachine(1,1,1,1,1,1, size=(2, 2, 2))
-xyz = XOR.TsetlinMachine(0, 0, 0, 0, 0, 0, shape)
-xyz_array = xyz.get_memristor_state()
+shape = (2, 2, 2)
+val = (0.5, 0.505)
+cal = 200
+
+memristor_obj = XOR.TsetlinMachine(0, 0, 0, 0, 0, 0, val, shape, cal)
+memristor_state = np.array(memristor_obj.get_memristor_state())
+# remove decimal output tm_state
+tm_state = np.array(memristor_obj.get_tm_state()).astype(np.int32)
 
 # แสดงแบบ List
 # print("m_array", np.array(xyz_array).tolist())
-print("memristor_state:")
-print(np.array(xyz_array), "\n")
-print("tm_state:")
-print(np.array(xyz_array) * 200, "\n")
+print("Memristor_state:")
+print(memristor_state, "\n")
+print("TM_state:")
+print(tm_state, "\n")
 
 ##################################################
 
@@ -56,7 +60,7 @@ X_test = X[NoOfTrainingSamples:NoOfTrainingSamples+NoOfTestingSamples, :]  # Inp
 y_test = Y[NoOfTrainingSamples:NoOfTrainingSamples+NoOfTestingSamples]  # Target value
 
 # This is a multiclass variant of the Tsetlin Machine, capable of distinguishing between multiple classes
-tsetlin_machine = XOR.TsetlinMachine(number_of_clauses, number_of_features, states, s, T, Th, shape)
+tsetlin_machine = XOR.TsetlinMachine(number_of_clauses, number_of_features, states, s, T, Th, val, shape, cal)
 
 # Training of the Tsetlin Machine in batch mode. The Tsetlin Machine can also be trained online
 tsetlin_machine.fit(X_training, y_training, y_training.shape[0], epochs=epochs)
