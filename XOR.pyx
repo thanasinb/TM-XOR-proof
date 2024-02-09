@@ -42,6 +42,7 @@ cdef class TsetlinMachine:
 	cdef int Th
 
 	cdef int[:,:,:] ta_state
+	cdef int[:,:,:] ta_state_A
 	
 	cdef int[:] clause_sign
 
@@ -51,11 +52,17 @@ cdef class TsetlinMachine:
 
 	cdef float[:,:,:] memristor_state
 
-	cdef float[:,:,:] tm_state
+	cdef int[:,:,:] tm_state
 
+	cdef float[:,:,:] tm_state_state
+
+	cdef int count
 	# Initialization of the Tsetlin Machine
 	def __init__(self, number_of_clauses, number_of_features, number_of_states, s, threshold, Th, val, shape, cal):
 		cdef int j
+
+		self.count = 0
+		print(f"count {self.count + 1} \n")
 
 		self.number_of_clauses = number_of_clauses
 		self.number_of_features = number_of_features
@@ -67,6 +74,9 @@ cdef class TsetlinMachine:
 		# The state of each Tsetlin Automaton is stored here. The automata are randomly initialized to either 'number_of_states' or 'number_of_states' + 1.
 		self.ta_state = np.random.choice([self.number_of_states, self.number_of_states+1], size=(self.number_of_clauses, self.number_of_features, 2)).astype(dtype=np.int32)
 
+		self.ta_state_A = np.array(self.ta_state)
+		print(f"ta_state_A\n {np.array(self.ta_state_A)} \n")
+
 		#############################
 		### memristor_array new!!!###
 		#############################
@@ -74,8 +84,12 @@ cdef class TsetlinMachine:
 		# self.m_array = np.zeros((2,2,2), dtype=np.int32)
 		# self.m_array = np.round(np.random.rand(*size), 3).astype(np.float32)
 		self.memristor_state = np.random.choice(val, size=shape).astype(np.float32)
-		self.tm_state = np.array(self.memristor_state) * cal
-
+		self.tm_state_state = np.array(self.memristor_state) * cal
+		self.tm_state = np.array(self.tm_state_state).astype(np.int32)
+		print(f"test \n {np.array(self.tm_state)} \n")
+		# print(np.array(self.tm_state), "\n")
+		# print("check")
+		# print(self.check)
 		############################################################################
 
 		# Data structure for keeping track of the sign of each clause
@@ -92,25 +106,18 @@ cdef class TsetlinMachine:
 			else:
 				self.clause_sign[j] = 1
 
-	def get_ta_state(self):
-		return self.ta_state
-
-	def get_memristor_state(self):
-		return self.memristor_state
-
-	def get_tm_state(self):
-		return self.tm_state
-
 	# Calculate the output of each clause using the actions of each Tsetline Automaton.
 	# Output is stored an internal output array.
 	cdef void calculate_clause_output(self, int[:] X):
 		cdef int j, k
-
+		# print(np.array(self.tm_state), "\n")
 		for j in range(self.number_of_clauses):				
 			self.clause_output[j] = 1
 			for k in range(self.number_of_features):
 				action_include = self.action(self.ta_state[j,k,0])
 				action_include_negated = self.action(self.ta_state[j,k,1])
+				# action_include = self.action(self.tm_state[j,k,0])
+				# action_include_negated = self.action(self.tm_state[j, k, 1])
 
 				if (action_include == 1 and X[k] == 0) or (action_include_negated == 1 and X[k] == 1):
 					self.clause_output[j] = 0
@@ -337,3 +344,13 @@ cdef class TsetlinMachine:
 				self.update(Xi, target_class)
 				
 		return
+
+
+	def get_ta_state(self):
+		return self.ta_state
+
+	def get_memristor_state(self):
+		return self.memristor_state
+
+	def get_tm_state(self):
+		return self.tm_state

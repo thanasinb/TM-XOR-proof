@@ -33,10 +33,12 @@ class memristor_paramitor:
 
     def tune(self, vt, dt):
         if(vt > self.v_off and vt > 0):
-            self.state = self.state + (self.k_off * pow(((vt/self.v_off)-1), self.alpha_off)) * dt
+            # self.state = self.state + (self.k_off * pow(((vt/self.v_off)-1), self.alpha_off)) * dt
+            self.state += 0.005
 
         if (vt < self.v_on and vt < 0):
-            self.state = self.state + (self.k_on * pow(((vt/self.v_on)-1), self.alpha_on)) * dt
+            # self.state = self.state + (self.k_on * pow(((vt/self.v_on)-1), self.alpha_on)) * dt
+            self.state -= 0.005
 
         # if (vt < self.v_off and vt > self.v_on):
         #     self.state = 0

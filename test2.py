@@ -18,20 +18,24 @@
 
 #####################################
 # main.py
+import time
+from memristor_demo import MyClass
 
-from memristor_demo import Memristor
+def main():
+    # สร้างอ็อบเจ็กต์ของ MyClass
+    my_object = MyClass()
 
-shape = (2, 2, 2)
-# mode = 1
+    # เรียกใช้ __init__ 10 ครั้ง
+    for i in range(10):
+        MyClass()
+        # แสดงผลจำนวนครั้งที่เรียกใช้ __init__ ในแต่ละรอบ
+        print(f"รอบที่ {i + 1}: จำนวนครั้งที่เรียกใช้ __init__: {my_object.get_init_count() - 1}")
 
-# สร้างอ็อบเจ็กต์ Memristor และดึง memristor_array
-memristor_obj = Memristor(shape)
-memristor_array = memristor_obj.get_memristor_array()
+        time.sleep(1)
+
+if __name__ == "__main__":
+    main()
 
 
-print("Memristor Array:")
-print(memristor_array[0])
-print("\nini_exclude:")
-print(memristor_array[1])
 
 

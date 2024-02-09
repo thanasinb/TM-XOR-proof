@@ -26,11 +26,28 @@
 #
 # 3 #########################################
 
-import numpy as np
+# import numpy as np
+#
+# class Memristor:
+#     def __init__(self, shape, mode=0):
+#         self.memristor_array = np.random.choice([0.5, 0.505], size=shape)
+#
+#     def get_memristor_array(self):
+#         return self.memristor_array, self.memristor_array * 200
 
-class Memristor:
-    def __init__(self, shape, mode=0):
-        self.memristor_array = np.random.choice([0.5, 0.505], size=shape)
+# 4 #############################################
+# my_class.py
 
-    def get_memristor_array(self):
-        return self.memristor_array, self.memristor_array * 200
+class MyClass:
+    # ตัวแปรสำหรับเก็บจำนวนครั้งที่เรียกใช้ __init__
+    init_count = 0
+
+    def __init__(self):
+        # เพิ่มจำนวนครั้งที่เรียกใช้ __init__
+        MyClass.init_count += 1
+
+    def get_init_count(self):
+        # ส่งค่าจำนวนครั้งที่เรียกใช้ __init__
+        return MyClass.init_count
+
+

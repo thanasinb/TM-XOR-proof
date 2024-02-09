@@ -31,15 +31,15 @@ cal = 200
 memristor_obj = XOR.TsetlinMachine(0, 0, 0, 0, 0, 0, val, shape, cal)
 memristor_state = np.array(memristor_obj.get_memristor_state())
 # remove decimal output tm_state
-tm_state = np.array(memristor_obj.get_tm_state()).astype(np.int32)
+tm_state = np.array(memristor_obj.get_tm_state())
+ta_state = np.array(memristor_obj.get_ta_state())
 
-# แสดงแบบ List
+# Show List
 # print("m_array", np.array(xyz_array).tolist())
-print("Memristor_state:")
-print(memristor_state, "\n")
-print("TM_state:")
-print(tm_state, "\n")
-
+print(f"Memristor_state:\n {memristor_state} \n")
+print(f"TM_state:\n {tm_state} \n")
+print(f"TA_state:\n {ta_state} \n")
+print("################ end ##################")
 ##################################################
 
 # Parameters of the pattern recognition problem
