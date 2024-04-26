@@ -61,8 +61,8 @@ cdef class TsetlinMachine:
 	def __init__(self, number_of_clauses, number_of_features, number_of_states, s, threshold, Th, val, shape, cal):
 		cdef int j
 
-		self.count = 0
-		print(f"count {self.count + 1} \n")
+		# self.count = 0
+		# print(f"count {self.count + 1} \n")
 
 		self.number_of_clauses = number_of_clauses
 		self.number_of_features = number_of_features
@@ -106,12 +106,21 @@ cdef class TsetlinMachine:
 			else:
 				self.clause_sign[j] = 1
 
+	def get_ta_state(self):
+		return self.ta_state
+
+	def get_memristor_state(self):
+		return self.memristor_state
+
+	def get_tm_state(self):
+		return self.tm_state
+
 	# Calculate the output of each clause using the actions of each Tsetline Automaton.
 	# Output is stored an internal output array.
 	cdef void calculate_clause_output(self, int[:] X):
 		cdef int j, k
 		# print(np.array(self.tm_state), "\n")
-		for j in range(self.number_of_clauses):				
+		for j in range(self.number_of_clauses):
 			self.clause_output[j] = 1
 			for k in range(self.number_of_features):
 				action_include = self.action(self.ta_state[j,k,0])
@@ -287,6 +296,7 @@ cdef class TsetlinMachine:
 							if 1.0*rand()/RAND_MAX <= 1.0*(self.s-1)/self.s:
 								if self.ta_state[j,k,0] < self.number_of_states*2:
 									self.ta_state[j,k,0] += 1
+									# self.memristor[j,k,0].tune(1,1) #test
 
 							if 1.0*rand()/RAND_MAX <= 1.0/self.s:
 								if self.ta_state[j,k,1] > 1:
@@ -346,11 +356,4 @@ cdef class TsetlinMachine:
 		return
 
 
-	def get_ta_state(self):
-		return self.ta_state
 
-	def get_memristor_state(self):
-		return self.memristor_state
-
-	def get_tm_state(self):
-		return self.tm_state
