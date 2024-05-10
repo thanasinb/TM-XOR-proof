@@ -307,12 +307,12 @@ cdef class TsetlinMachine:
 								if self.ta_state[j,k,0] < self.number_of_states*2:
 									# self.ta_state[j,k,0] += 1
 
-									print(f"demo_ta_state1 = {self.ta_state[j, k, 0]} \n")
+									print(f"ta_state_old = {self.ta_state[j, k, 0]} \n")
 									# self.memristor[j,k,0].tune(1,1) #test
 									memristor_obj.tune(1,1)
 									# demo_test = demo_test + self.ta_state[j,k,0]
 									self.ta_state[j, k, 0] += memristor_obj.getState()
-									print(f"demo_ta_state2 = {self.ta_state[j, k, 0]} \n")
+									print(f"ta_state_new = {self.ta_state[j, k, 0]} \n")
 									# test4 = memristor_obj.getState() + self.ta_state[j, k, 0]
 									# print(f"demo_test_getState = {test4} \n")
 
