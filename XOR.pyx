@@ -28,6 +28,8 @@ cimport numpy as np
 import random
 from libc.stdlib cimport rand, RAND_MAX
 
+import memristor
+from memristor import memristor_paramitor
 #############################
 ### The Tsetlin Machine #####
 #############################
@@ -43,7 +45,7 @@ cdef class TsetlinMachine:
 
 	cdef int[:,:,:] ta_state
 	cdef int[:,:,:] ta_state_A
-	
+
 	cdef int[:] clause_sign
 
 	cdef int[:] clause_output
@@ -63,6 +65,10 @@ cdef class TsetlinMachine:
 
 		# self.count = 0
 		# print(f"count {self.count + 1} \n")
+
+		# memristor_obj = memristor.mem
+		# demo_test = memristor_obj.tune(1,1)
+		# print(f"demo_test = {demo_test} \n")
 
 		self.number_of_clauses = number_of_clauses
 		self.number_of_features = number_of_features
@@ -234,6 +240,10 @@ cdef class TsetlinMachine:
 		cdef int action_include, action_include_negated
 		cdef int output_sum
 
+		# test3 = memristor.mem
+		memristor_obj = memristor_paramitor(state=0, v_off=0.09, v_on=-0.15, k_off=11.27, k_on=-0.00574, alpha_off=1, alpha_on=1, r_off=150000, r_on=1400, D_nm=0.001)
+		# memristor_obj = test3
+
 		###############################
 		### Calculate Clause Output ###
 		###############################
@@ -295,21 +305,32 @@ cdef class TsetlinMachine:
 						if X[k] == 1:
 							if 1.0*rand()/RAND_MAX <= 1.0*(self.s-1)/self.s:
 								if self.ta_state[j,k,0] < self.number_of_states*2:
-									self.ta_state[j,k,0] += 1
+									# self.ta_state[j,k,0] += 1
+
+									print(f"demo_ta_state1 = {self.ta_state[j, k, 0]} \n")
 									# self.memristor[j,k,0].tune(1,1) #test
+									memristor_obj.tune(1,1)
+									# demo_test = demo_test + self.ta_state[j,k,0]
+									self.ta_state[j, k, 0] += memristor_obj.getState()
+									print(f"demo_ta_state2 = {self.ta_state[j, k, 0]} \n")
+									# test4 = memristor_obj.getState() + self.ta_state[j, k, 0]
+									# print(f"demo_test_getState = {test4} \n")
 
 							if 1.0*rand()/RAND_MAX <= 1.0/self.s:
 								if self.ta_state[j,k,1] > 1:
+									# print(f"test 02")
 									self.ta_state[j,k,1] -= 1
 
 						elif X[k] == 0:
 							if 1.0*rand()/RAND_MAX <= 1.0*(self.s-1)/self.s:
 								if self.ta_state[j,k,1] < self.number_of_states*2:
+									# print(f"test 03")
 									self.ta_state[j,k,1] += 1
 
 							if 1.0*rand()/RAND_MAX <= 1.0/self.s:
 								if self.ta_state[j,k,0] > 1:
 									self.ta_state[j,k,0] -= 1
+									# print(f"test 04")
 					
 			elif self.feedback_to_clauses[j] < 0:
 				########################################################
@@ -340,7 +361,8 @@ cdef class TsetlinMachine:
 				
 		Xi = np.zeros((self.number_of_features,), dtype=np.int32)
 		
-		random_index = np.arange(number_of_examples)
+		# random_index = np.arange(number_of_examples)
+		random_index = np.arange(number_of_examples, dtype=np.int32)
 
 		for epoch in range(epochs):	
 			#np.random.shuffle(random_index)
