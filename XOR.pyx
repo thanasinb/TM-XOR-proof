@@ -240,6 +240,7 @@ cdef class TsetlinMachine:
 		cdef int action_include, action_include_negated
 		cdef int output_sum
 
+		### test ###
 		# test3 = memristor.mem
 		memristor_obj = memristor_paramitor(state=0, v_off=0.09, v_on=-0.15, k_off=11.27, k_on=-0.00574, alpha_off=1, alpha_on=1, r_off=150000, r_on=1400, D_nm=0.001)
 		# memristor_obj = test3
@@ -305,32 +306,34 @@ cdef class TsetlinMachine:
 						if X[k] == 1:
 							if 1.0*rand()/RAND_MAX <= 1.0*(self.s-1)/self.s:
 								if self.ta_state[j,k,0] < self.number_of_states*2:
-									# self.ta_state[j,k,0] += 1
+									# print(f"ta_state_old_1 = {self.ta_state[j, k, 0]}")
+									# self.ta_state[j,k,0] += 1		#original
 
-									print(f"ta_state_old = {self.ta_state[j, k, 0]} \n")
-									# self.memristor[j,k,0].tune(1,1) #test
 									memristor_obj.tune(1,1)
-									# demo_test = demo_test + self.ta_state[j,k,0]
-									self.ta_state[j, k, 0] += memristor_obj.getState()
-									print(f"ta_state_new = {self.ta_state[j, k, 0]} \n")
-									# test4 = memristor_obj.getState() + self.ta_state[j, k, 0]
-									# print(f"demo_test_getState = {test4} \n")
+									# print(f"getState_1 = {memristor_obj.getState()}")
+									self.ta_state[j,k,0] += memristor_obj.getState()
+									# print(f"ta_state_new_1 = {self.ta_state[j,k,0]} \n")
 
 							if 1.0*rand()/RAND_MAX <= 1.0/self.s:
 								if self.ta_state[j,k,1] > 1:
-									# print(f"test 02")
-									self.ta_state[j,k,1] -= 1
+									# print(f"ta_state_old = {self.ta_state[j,k,1]} ")
+									# self.ta_state[j,k,1] -= 1 	#original
+									# self.ta_state[j, k, 1] = self.ta_state[j,k,1] - 1
+
+									memristor_obj.tune(-1, 1)
+									# print(f"getState_2 = {memristor_obj.getState()} ")
+									self.ta_state[j,k,1] += memristor_obj.getState()
+									# self.ta_state[j, k, 1] = self.ta_state[j, k, 1] + memristor_obj.getState()
+									# print(f"ta_state_new_2 = {self.ta_state[j,k,1]} \n")
 
 						elif X[k] == 0:
 							if 1.0*rand()/RAND_MAX <= 1.0*(self.s-1)/self.s:
 								if self.ta_state[j,k,1] < self.number_of_states*2:
-									# print(f"test 03")
 									self.ta_state[j,k,1] += 1
 
 							if 1.0*rand()/RAND_MAX <= 1.0/self.s:
 								if self.ta_state[j,k,0] > 1:
 									self.ta_state[j,k,0] -= 1
-									# print(f"test 04")
 					
 			elif self.feedback_to_clauses[j] < 0:
 				########################################################
