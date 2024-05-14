@@ -310,19 +310,20 @@ cdef class TsetlinMachine:
 									# self.ta_state[j,k,0] += 1		#original
 
 									memristor_obj.tune(1,1)
-									# print(f"getState_1 = {memristor_obj.getState()}")
-									self.ta_state[j,k,0] += memristor_obj.getState()
+									print(f"getState_1 = {memristor_obj.getState()}")
+									self.ta_state[j,k,0] = memristor_obj.getState()
 									# print(f"ta_state_new_1 = {self.ta_state[j,k,0]} \n")
 
 							if 1.0*rand()/RAND_MAX <= 1.0/self.s:
+								print(f"ta_state_old = {self.ta_state[j, k, 1]} ")
 								if self.ta_state[j,k,1] > 1:
 									# print(f"ta_state_old = {self.ta_state[j,k,1]} ")
 									# self.ta_state[j,k,1] -= 1 	#original
 									# self.ta_state[j, k, 1] = self.ta_state[j,k,1] - 1
 
 									memristor_obj.tune(-1, 1)
-									# print(f"getState_2 = {memristor_obj.getState()} ")
-									self.ta_state[j,k,1] += memristor_obj.getState()
+									print(f"getState_2 = {memristor_obj.getState()} ")
+									self.ta_state[j,k,1] = memristor_obj.getState()
 									# self.ta_state[j, k, 1] = self.ta_state[j, k, 1] + memristor_obj.getState()
 									# print(f"ta_state_new_2 = {self.ta_state[j,k,1]} \n")
 
