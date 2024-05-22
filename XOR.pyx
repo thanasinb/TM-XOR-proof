@@ -27,7 +27,7 @@ import numpy as np
 cimport numpy as np
 import random
 from libc.stdlib cimport rand, RAND_MAX
-from Memristor import Memristor
+from memristor cimport Memristor
 
 #############################
 ### The Tsetlin Machine #####
@@ -50,7 +50,7 @@ cdef class TsetlinMachine:
 
 	cdef int[:] feedback_to_clauses
 
-	# memristors = None
+	cdef Memristor memristors
 
 	# Initialization of the Tsetlin Machine
 	def __init__(self, number_of_clauses, number_of_features, number_of_states, s, threshold, Th):
@@ -62,11 +62,9 @@ cdef class TsetlinMachine:
 		self.s = s
 		self.threshold = threshold
 		self.Th = Th
-		self.memristors = Memristor(0)
 
 		# The state of each Tsetlin Automaton is stored here. The automata are randomly initialized to either 'number_of_states' or 'number_of_states' + 1.
 		self.ta_state = np.random.choice([self.number_of_states, self.number_of_states+1], size=(self.number_of_clauses, self.number_of_features, 2)).astype(dtype=np.int32)
-		self.memristors = Memristor(self.ta_state[1,1,1])
 
 		# Data structure for keeping track of the sign of each clause
 		self.clause_sign = np.zeros(self.number_of_clauses, dtype=np.int32)
