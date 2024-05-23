@@ -50,7 +50,7 @@ cdef class TsetlinMachine:
 
 	cdef int[:] feedback_to_clauses
 
-	cdef Memristor memristors
+	cdef Memristor[:,:,:] memristors
 
 	# Initialization of the Tsetlin Machine
 	def __init__(self, number_of_clauses, number_of_features, number_of_states, s, threshold, Th):
@@ -66,6 +66,16 @@ cdef class TsetlinMachine:
 		# The state of each Tsetlin Automaton is stored here. The automata are randomly initialized to either 'number_of_states' or 'number_of_states' + 1.
 		self.ta_state = np.random.choice([self.number_of_states, self.number_of_states+1], size=(self.number_of_clauses, self.number_of_features, 2)).astype(dtype=np.int32)
 
+		self.memristors = np.empty((self.number_of_clauses, self.number_of_features, 2), dtype=object)
+		for a in range(self.number_of_clauses):
+			for b in range(self.number_of_features):
+				for c in range(2):
+					self.memristors[a, b, c] = Memristor(0.0, 1.0, 2.0)
+					# print(f"memristors_state[{i},{j},{k}] = {self.memristors[i, j, k].get_mr_state()}")
+
+		# print(f"memristors[{0},{0},{0}].state = {self.memristors[0, 0, 0].get_mr_state()}")
+		# self.print_memristor_states()
+
 		# Data structure for keeping track of the sign of each clause
 		self.clause_sign = np.zeros(self.number_of_clauses, dtype=np.int32)
 		
@@ -80,6 +90,25 @@ cdef class TsetlinMachine:
 			else:
 				self.clause_sign[j] = 1
 
+	def print_ta_state(self):
+		"""
+        Print the values inside the ta_state ndarray.
+        """
+		cdef int i, j, k
+		for i in range(self.ta_state.shape[0]):
+			for j in range(self.ta_state.shape[1]):
+				for k in range(self.ta_state.shape[2]):
+					print(f"ta_state[{i},{j},{k}] = {self.ta_state[i, j, k]}")
+
+	# def print_memristor_states(self):
+	# 	"""
+    #     Print the states of the memristor array.
+    #     """
+	# 	cdef int i, j, k
+	# 	for i in range(self.memristors.shape[0]):
+	# 		for j in range(self.memristors.shape[1]):
+	# 			for k in range(self.memristors.shape[2]):
+	# 				print(f"memristors[{i},{j},{k}].state = {self.memristors[i, j, k].get_mr_state()}")
 
 	# Calculate the output of each clause using the actions of each Tsetline Automaton.
 	# Output is stored an internal output array.
