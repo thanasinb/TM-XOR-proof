@@ -41,11 +41,12 @@ y_test = Y[NoOfTrainingSamples:NoOfTrainingSamples+NoOfTestingSamples] # Target 
 
 # This is a multiclass variant of the Tsetlin Machine, capable of distinguishing between multiple classes
 tsetlin_machine = XOR.TsetlinMachine(number_of_clauses, number_of_features, states, s, T, Th, init_memristor_state)
-tsetlin_machine.print_ta_states()
+# tsetlin_machine.print_ta_states()
 tsetlin_machine.print_memristor_states()
 
 # Training of the Tsetlin Machine in batch mode. The Tsetlin Machine can also be trained online
 tsetlin_machine.fit(X_training, y_training, y_training.shape[0], epochs=epochs)
+tsetlin_machine.print_memristor_states()
 
 # Some performacne statistics
 

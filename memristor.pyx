@@ -10,18 +10,18 @@ cdef class Memristor:
         self.vtn = vtn
         self.vtp = vtp
 
-        self.mr_state = ta_state/self.number_of_states*self.init_memristor_state
+        self.mr_state = (ta_state/self.number_of_states)*self.init_memristor_state
 
-    cdef float tune(self, float voltage, float dt):
+    def tune(self, float dir):
         cdef float dx
-        if voltage > self.vtp:
-            dx = 1.0
-        elif voltage < self.vtn:
-            dx = -1.0
+        # if voltage > self.vtp:
+        #     dx = 1.0
+        # elif voltage < self.vtn:
+        #     dx = -1.0
 
+        dx = float(dir/self.number_of_states)*self.init_memristor_state
         self.mr_state += dx
-
-        return self.mr_state
+        # print(f"{self.mr_state}, {dx}")
 
     def get_mr_state(self):
         return round(self.mr_state, 3)

@@ -113,8 +113,8 @@ cdef class TsetlinMachine:
 		for j in xrange(self.number_of_clauses):				
 			self.clause_output[j] = 1
 			for k in xrange(self.number_of_features):
-				action_include = self.action(self.ta_state[j,k,0])
-				action_include_negated = self.action(self.ta_state[j,k,1])
+				action_include = self.action(self.memristors[j,k,0].get_ta_state())
+				action_include_negated = self.action(self.memristors[j,k,1].get_ta_state())
 
 				if (action_include == 1 and X[k] == 0) or (action_include_negated == 1 and X[k] == 1):
 					self.clause_output[j] = 0
@@ -154,7 +154,7 @@ cdef class TsetlinMachine:
 
 	# Get the state of a specific automaton, indexed by clause, feature, and automaton type (include/include negated).
 	def get_state(self, int clause, int feature, int automaton_type):
-		return self.ta_state[clause,feature,automaton_type]
+		return self.memristors[clause,feature,automaton_type].get_ta_state()
 
 	# Sum up the votes for each output decision (y=0 or y = 1)
 	cdef int sum_up_clause_votes(self):
@@ -271,32 +271,32 @@ cdef class TsetlinMachine:
 				if self.clause_output[j] == 0:		
 					for k in xrange(self.number_of_features):	
 						if 1.0*rand()/RAND_MAX <= 1.0/self.s:								
-							if self.ta_state[j,k,0] > 1:
-								self.ta_state[j,k,0] -= 1
+							if self.memristors[j,k,0].get_ta_state() > 1:
+								self.memristors[j,k,0].tune(-1.0)
 													
 						if 1.0*rand()/RAND_MAX <= 1.0/self.s:
-							if self.ta_state[j,k,1] > 1:
-								self.ta_state[j,k,1] -= 1
+							if self.memristors[j,k,1].get_ta_state() > 1:
+								self.memristors[j,k,1].tune(-1.0)
 
 				if self.clause_output[j] == 1:					
 					for k in xrange(self.number_of_features):
 						if X[k] == 1:
 							if 1.0*rand()/RAND_MAX <= 1.0*(self.s-1)/self.s:
-								if self.ta_state[j,k,0] < self.number_of_states*2:
-									self.ta_state[j,k,0] += 1
+								if self.memristors[j,k,0].get_ta_state() < self.number_of_states*2:
+									self.memristors[j,k,0].tune(1.0)
 
 							if 1.0*rand()/RAND_MAX <= 1.0/self.s:
-								if self.ta_state[j,k,1] > 1:
-									self.ta_state[j,k,1] -= 1
+								if self.memristors[j,k,1].get_ta_state() > 1:
+									self.memristors[j,k,1].tune(-1.0)
 
 						elif X[k] == 0:
 							if 1.0*rand()/RAND_MAX <= 1.0*(self.s-1)/self.s:
-								if self.ta_state[j,k,1] < self.number_of_states*2:
-									self.ta_state[j,k,1] += 1
+								if self.memristors[j,k,1].get_ta_state() < self.number_of_states*2:
+									self.memristors[j,k,1].tune(1.0)
 
 							if 1.0*rand()/RAND_MAX <= 1.0/self.s:
-								if self.ta_state[j,k,0] > 1:
-									self.ta_state[j,k,0] -= 1
+								if self.memristors[j,k,0].get_ta_state() > 1:
+									self.memristors[j,k,0].tune(-1.0)
 					
 			elif self.feedback_to_clauses[j] < 0:
 				########################################################
@@ -304,15 +304,15 @@ cdef class TsetlinMachine:
 				########################################################
 				if self.clause_output[j] == 1:
 					for k in xrange(self.number_of_features):
-						action_include = self.action(self.ta_state[j,k,0])
-						action_include_negated = self.action(self.ta_state[j,k,1])
+						action_include = self.action(self.memristors[j,k,0].get_ta_state())
+						action_include_negated = self.action(self.memristors[j,k,1].get_ta_state())
 
 						if X[k] == 0:
-							if action_include == 0 and self.ta_state[j,k,0] < self.number_of_states*2:
-								self.ta_state[j,k,0] += 1
+							if action_include == 0 and self.memristors[j,k,0].get_ta_state() < self.number_of_states*2:
+								self.memristors[j,k,0].tune(1.0)
 						elif X[k] == 1:
-							if action_include_negated == 0 and self.ta_state[j,k,1] < self.number_of_states*2:
-								self.ta_state[j,k,1] += 1
+							if action_include_negated == 0 and self.memristors[j,k,1].get_ta_state() < self.number_of_states*2:
+								self.memristors[j,k,1].tune(1.0)
 
 	##############################################
 	### Batch Mode Training of Tsetlin Machine ###

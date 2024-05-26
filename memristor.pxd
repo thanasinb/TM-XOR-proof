@@ -7,5 +7,5 @@ cdef class Memristor:
 
     cdef float mr_state
 
-    cdef float tune(self, float voltage, float dt)
+    # cdef void tune(self, float dir)
     # cdef float get_mr_state(self)
