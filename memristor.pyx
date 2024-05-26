@@ -24,7 +24,7 @@ cdef class Memristor:
         return self.mr_state
 
     def get_mr_state(self):
-        return self.mr_state
+        return round(self.mr_state, 3)
 
     def get_ta_state(self):
         return int(self.mr_state*self.number_of_states/self.init_memristor_state)

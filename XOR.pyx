@@ -156,12 +156,6 @@ cdef class TsetlinMachine:
 	def get_state(self, int clause, int feature, int automaton_type):
 		return self.ta_state[clause,feature,automaton_type]
 
-	def get_states(self):
-		return self.ta_state
-
-	def get_memristors(self):
-		return self.memristors
-
 	# Sum up the votes for each output decision (y=0 or y = 1)
 	cdef int sum_up_clause_votes(self):
 		cdef int output_sum
