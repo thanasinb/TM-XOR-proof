@@ -20,6 +20,7 @@ number_of_clauses = 2
 states = 100 
 Th = 1
 
+init_memristor_state = 0.5
 
 # Parameters of the pattern recognition problem
 number_of_features = 2
@@ -39,8 +40,9 @@ X_test = X[NoOfTrainingSamples:NoOfTrainingSamples+NoOfTestingSamples,:] # Input
 y_test = Y[NoOfTrainingSamples:NoOfTrainingSamples+NoOfTestingSamples] # Target value
 
 # This is a multiclass variant of the Tsetlin Machine, capable of distinguishing between multiple classes
-tsetlin_machine = XOR.TsetlinMachine(number_of_clauses, number_of_features, states, s, T, Th)
-tsetlin_machine.print_ta_state()
+tsetlin_machine = XOR.TsetlinMachine(number_of_clauses, number_of_features, states, s, T, Th, init_memristor_state)
+tsetlin_machine.print_ta_states()
+tsetlin_machine.print_memristor_states()
 
 # Training of the Tsetlin Machine in batch mode. The Tsetlin Machine can also be trained online
 tsetlin_machine.fit(X_training, y_training, y_training.shape[0], epochs=epochs)

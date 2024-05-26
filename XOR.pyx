@@ -43,17 +43,15 @@ cdef class TsetlinMachine:
 	cdef int Th
 
 	cdef int[:,:,:] ta_state
-	
 	cdef int[:] clause_sign
-
 	cdef int[:] clause_output
-
 	cdef int[:] feedback_to_clauses
 
 	cdef Memristor[:,:,:] memristors
+	cdef init_memristor_state
 
 	# Initialization of the Tsetlin Machine
-	def __init__(self, number_of_clauses, number_of_features, number_of_states, s, threshold, Th):
+	def __init__(self, number_of_clauses, number_of_features, number_of_states, s, threshold, Th, init_memristor_state):
 		cdef int j
 
 		self.number_of_clauses = number_of_clauses
@@ -62,6 +60,7 @@ cdef class TsetlinMachine:
 		self.s = s
 		self.threshold = threshold
 		self.Th = Th
+		self.init_memristor_state = init_memristor_state
 
 		# The state of each Tsetlin Automaton is stored here. The automata are randomly initialized to either 'number_of_states' or 'number_of_states' + 1.
 		self.ta_state = np.random.choice([self.number_of_states, self.number_of_states+1], size=(self.number_of_clauses, self.number_of_features, 2)).astype(dtype=np.int32)
@@ -70,11 +69,7 @@ cdef class TsetlinMachine:
 		for a in range(self.number_of_clauses):
 			for b in range(self.number_of_features):
 				for c in range(2):
-					self.memristors[a, b, c] = Memristor(0.0, 1.0, 2.0)
-					# print(f"memristors_state[{i},{j},{k}] = {self.memristors[i, j, k].get_mr_state()}")
-
-		# print(f"memristors[{0},{0},{0}].state = {self.memristors[0, 0, 0].get_mr_state()}")
-		# self.print_memristor_states()
+					self.memristors[a, b, c] = Memristor(self.ta_state[a, b, c], init_memristor_state, number_of_states, 1.0, 2.0)
 
 		# Data structure for keeping track of the sign of each clause
 		self.clause_sign = np.zeros(self.number_of_clauses, dtype=np.int32)
@@ -90,7 +85,7 @@ cdef class TsetlinMachine:
 			else:
 				self.clause_sign[j] = 1
 
-	def print_ta_state(self):
+	def print_ta_states(self):
 		"""
         Print the values inside the ta_state ndarray.
         """
@@ -100,15 +95,15 @@ cdef class TsetlinMachine:
 				for k in range(self.ta_state.shape[2]):
 					print(f"ta_state[{i},{j},{k}] = {self.ta_state[i, j, k]}")
 
-	# def print_memristor_states(self):
-	# 	"""
-    #     Print the states of the memristor array.
-    #     """
-	# 	cdef int i, j, k
-	# 	for i in range(self.memristors.shape[0]):
-	# 		for j in range(self.memristors.shape[1]):
-	# 			for k in range(self.memristors.shape[2]):
-	# 				print(f"memristors[{i},{j},{k}].state = {self.memristors[i, j, k].get_mr_state()}")
+	def print_memristor_states(self):
+		"""
+        Print the states of the memristor array.
+        """
+		cdef int i, j, k
+		for i in range(self.memristors.shape[0]):
+			for j in range(self.memristors.shape[1]):
+				for k in range(self.memristors.shape[2]):
+					print(f"memristors[{i},{j},{k}].state = {self.memristors[i, j, k].get_mr_state()}, {self.memristors[i, j, k].get_ta_state()}")
 
 	# Calculate the output of each clause using the actions of each Tsetline Automaton.
 	# Output is stored an internal output array.
