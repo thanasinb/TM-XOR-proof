@@ -1,6 +1,4 @@
 # cython: language_level=3
-import numpy as np
-cimport numpy as np
 
 cdef class Memristor:
     def __init__(self, int ta_state, float init_memristor_state, int number_of_states,
