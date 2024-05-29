@@ -23,9 +23,11 @@ Th = 1
 
 init_memristor_state = 0.5
 voltage = 1.2
-dt_off = (177 * (10 ** -3)) / 100
+dt_off = (177 * (10 ** -3)) / 1000
 dt_on = (62 * (10 ** -12)) / 100
-selected_params = vteam_params.get_vteam_params("Yalon2012")
+dt_on = dt_off
+
+selected_params = vteam_params.get_vteam_params("Yalon2012mod")
 
 # Parameters of the pattern recognition problem
 number_of_features = 2

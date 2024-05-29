@@ -16,6 +16,18 @@ def get_vteam_params(model):
         "k_on" : "-80.0",
         "d" : "(10 * 10 ** -9)"
         }, 
+        "Yalon2012mod" : {
+        "description" : "HfO2 Yalon 2012",
+        "alpha_off" : "1.0",
+        "alpha_on" : "3.0",
+        "v_off" : "0.5",
+        "v_on" : "-0.53",
+        "r_off" : "2.5 * (10 ** 3)",
+        "r_on" : "100.0",
+        "k_off" : "40.30 * (10 ** -9)",
+        "k_on" : "-80.0",
+        "d" : "(10 * 10 ** -9)"
+        }, 
         "Ho2017" : {
         "description": "HfO2 Ho 2017",
         "alpha_off" : "2.0",

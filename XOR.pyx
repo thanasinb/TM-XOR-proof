@@ -100,7 +100,7 @@ cdef class TsetlinMachine:
 														 self.v_off, self.v_on,
 														 self.r_off, self.r_on,
 														 self.k_off, self.k_on,
-														 self.d)
+														 self.d, a, b, c)
 
 		# int ta_state, float init_memristor_state, int number_of_states,
 		# float alpha_off, float alpha_on, float v_off, float v_on, float r_off, float r_on, float k_off, float k_on, float d
