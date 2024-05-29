@@ -22,13 +22,14 @@ cdef class Memristor:
     def tune(self, float voltage, float dt):
         cdef float dx
 
-        dx = float(1/self.number_of_states)*self.init_memristor_state
+        # dx = float(1/self.number_of_states)*self.init_memristor_state
         if voltage > self.v_off:
-            # dx = self.k_off * (((voltage/self.v_off) - 1) ** self.alpha_off) * dt
-            self.mr_state += dx
+            dx = self.k_off * (((voltage/self.v_off) - 1) ** self.alpha_off) * dt
         elif voltage < self.v_on:
-            # dx = self.k_on * (((voltage/self.v_on) - 1) ** self.alpha_on) * dt
-            self.mr_state -= dx
+            dx = self.k_on * (((voltage/self.v_on) - 1) ** self.alpha_on) * dt
+
+        self.mr_state += dx
+        print(self.mr_state, dx)
 
     def get_mr_state(self):
         return round(self.mr_state, 3)

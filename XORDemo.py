@@ -6,6 +6,7 @@ import pyximport; pyximport.install(setup_args={
                             reload_support=True)
 
 import XOR
+import vteam_params
 
 X = np.random.randint(2, size=(10000,2), dtype=np.int32)
 Y = np.ones([10000]).astype(dtype=np.int32)
@@ -21,18 +22,10 @@ states = 100
 Th = 1
 
 init_memristor_state = 0.5
-alpha_off = 1.0
-alpha_on = 3.0
-v_off = 0.5
-v_on = -0.53
-r_off = 2.5 * (10 ** 3)
-r_on = 100.0
-k_off = 4.03 * (10 ** -8)
-k_on = -80.0
-d = (10 * 10 ** -9)
 voltage = 1.2
-dt_off = 177 * (10 ** -3)
-dt_on = 62 * (10 ** -12)
+dt_off = (177 * (10 ** -3)) / 100
+dt_on = (62 * (10 ** -12)) / 100
+selected_params = vteam_params.get_vteam_params("Yalon2012")
 
 # Parameters of the pattern recognition problem
 number_of_features = 2
@@ -53,13 +46,22 @@ y_test = Y[NoOfTrainingSamples:NoOfTrainingSamples+NoOfTestingSamples] # Target 
 
 # This is a multiclass variant of the Tsetlin Machine, capable of distinguishing between multiple classes
 tsetlin_machine = XOR.TsetlinMachine(number_of_clauses, number_of_features, states, s, T, Th,
-                                     init_memristor_state, alpha_off, alpha_on, v_off, v_on, r_off, r_on, k_off, k_on, d,
+                                     init_memristor_state,
+                                     selected_params["alpha_off"],
+                                     selected_params["alpha_on"],
+                                     selected_params["v_off"],
+                                     selected_params["v_on"],
+                                     selected_params["r_off"],
+                                     selected_params["r_on"],
+                                     selected_params["k_off"],
+                                     selected_params["k_on"],
+                                     selected_params["d"],
                                      voltage, dt_off, dt_on)
-# tsetlin_machine.print_ta_states()
 tsetlin_machine.print_memristor_states()
 
 # Training of the Tsetlin Machine in batch mode. The Tsetlin Machine can also be trained online
 tsetlin_machine.fit(X_training, y_training, y_training.shape[0], epochs=epochs)
+print(f"\n")
 tsetlin_machine.print_memristor_states()
 
 # Some performacne statistics
