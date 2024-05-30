@@ -16,5 +16,6 @@ cdef class Memristor:
     cdef float k_on
     cdef float d
     cdef float x
+    cdef float dx
 
     cdef float mr_state

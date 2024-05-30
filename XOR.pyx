@@ -28,6 +28,8 @@ cimport numpy as np
 import random
 from libc.stdlib cimport rand, RAND_MAX
 from memristor cimport Memristor
+import csv
+import os
 
 #############################
 ### The Tsetlin Machine #####
@@ -61,6 +63,9 @@ cdef class TsetlinMachine:
 	cdef float voltage
 	cdef float dt_off
 	cdef float dt_on
+
+	mycsv = {}
+	csvwriter = {}
 
 	# Initialization of the Tsetlin Machine
 	def __init__(self, number_of_clauses, number_of_features, number_of_states, s, threshold, Th,
@@ -119,6 +124,8 @@ cdef class TsetlinMachine:
 			else:
 				self.clause_sign[j] = 1
 
+		self.init_csv()
+
 	def print_ta_states(self):
 		"""
         Print the values inside the ta_state ndarray.
@@ -140,6 +147,43 @@ cdef class TsetlinMachine:
 				for k in range(self.memristors.shape[2]):
 					print(f"memristors[{i},{j},{k}].state = {self.memristors[i, j, k].get_mr_state()}, {self.memristors[i, j, k].get_ta_state()}")
 		print(f"\n")
+
+	def init_csv(self):
+		cdef int i, j, k
+		cdef float mr_state, mr_dx, mr_x
+		for i in range(self.memristors.shape[0]):
+			for j in range(self.memristors.shape[1]):
+				for k in range(self.memristors.shape[2]):
+					if os.path.exists(f"memristor{i}{j}{k}.csv"):
+						os.remove(f"memristor{i}{j}{k}.csv")
+
+					with open(f"memristor{i}{j}{k}.csv", 'w', newline='') as csvfile:
+						writer = csv.DictWriter(csvfile, fieldnames=["TA State", "Memristor State", "Distance Shift", "Final Distance"])
+						writer.writeheader()
+						csvfile.close()
+
+					self.mycsv[i, j, k] = open(f"memristor{i}{j}{k}.csv", 'a', newline='')
+					self.csvwriter[i, j, k] = csv.writer(self.mycsv[i, j, k])
+					mr_ta_state, mr_state, mr_dx, mr_x = self.memristors[i, j, k].get_mr_xdx()
+					self.csvwriter[i, j, k].writerow([mr_ta_state, mr_state, mr_dx, mr_x])
+
+	def append_csv(self):
+		cdef int i, j, k, mr_ta_state
+		cdef float mr_state, mr_dx, mr_x
+		for i in range(self.memristors.shape[0]):
+			for j in range(self.memristors.shape[1]):
+				for k in range(self.memristors.shape[2]):
+					mr_ta_state, mr_state, mr_dx, mr_x = self.memristors[i, j, k].get_mr_xdx()
+					self.csvwriter[i, j, k].writerow([mr_ta_state, mr_state, mr_dx, mr_x])
+
+	def close_csv(self):
+		cdef int i, j, k, mr_ta_state
+		cdef float mr_state, mr_dx, mr_x
+		for i in range(self.memristors.shape[0]):
+			for j in range(self.memristors.shape[1]):
+				for k in range(self.memristors.shape[2]):
+					self.mycsv[i, j, k].close()
+
 
 	# Calculate the output of each clause using the actions of each Tsetline Automaton.
 	# Output is stored an internal output array.
@@ -349,6 +393,7 @@ cdef class TsetlinMachine:
 						elif X[k] == 1:
 							if action_include_negated == 0 and self.memristors[j,k,1].get_ta_state() < self.number_of_states*2:
 								self.memristors[j,k,1].tune(self.voltage, self.dt_off)
+		self.append_csv()
 
 	##############################################
 	### Batch Mode Training of Tsetlin Machine ###
@@ -375,5 +420,6 @@ cdef class TsetlinMachine:
 				for j in xrange(self.number_of_features):
 					Xi[j] = X[example_id,j]
 				self.update(Xi, target_class)
-				
+
+		self.close_csv()
 		return

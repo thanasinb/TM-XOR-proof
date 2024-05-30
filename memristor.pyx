@@ -17,19 +17,18 @@ cdef class Memristor:
         self.k_off = k_off
         self.k_on = k_on
         self.d = d
+        self.dx = 0
 
         self.mr_state = (ta_state/self.number_of_states)*self.init_memristor_state
         self.x = self.mr_state * self.d
 
     def tune(self, float voltage, float dt):
-        cdef float dx
-
         if voltage > self.v_off:
-            dx = self.k_off * (((voltage/self.v_off) - 1) ** self.alpha_off) * dt
+            self.dx = self.k_off * (((voltage/self.v_off) - 1) ** self.alpha_off) * dt
         elif voltage < self.v_on:
-            dx = self.k_on * (((voltage/self.v_on) - 1) ** self.alpha_on) * dt
+            self.dx = self.k_on * (((voltage/self.v_on) - 1) ** self.alpha_on) * dt
 
-        self.x += dx
+        self.x += self.dx
 
         if self.x > self.d:
             self.x = self.d
@@ -38,10 +37,13 @@ cdef class Memristor:
             self.x = 0
 
         self.mr_state = self.x/self.d
-        print(self.mr_state, self.x, dx)
+        # print(self.mr_state, self.x, self.dx)
 
     def get_mr_state(self):
         return self.mr_state
+
+    def get_mr_xdx(self):
+        return int(self.mr_state*self.number_of_states/self.init_memristor_state), self.mr_state, self.dx, self.x
 
     def get_ta_state(self):
         return int(self.mr_state*self.number_of_states/self.init_memristor_state)
