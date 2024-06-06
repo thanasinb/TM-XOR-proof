@@ -23,11 +23,22 @@ Th = 1
 
 init_memristor_state = 0.5
 voltage = 1.2
-dt_off = (177 * (10 ** -3)) / 100
-dt_on = (62 * (10 ** -12)) / 100
-dt_on = dt_off
 
-selected_params = vteam_params.get_vteam_params("Yalon2012")
+selected_params = vteam_params.get_vteam_params("Campbell2017")
+alpha_off = selected_params["alpha_off"]
+alpha_on = selected_params["alpha_on"]
+v_off = selected_params["v_off"]
+v_on = selected_params["v_on"]
+k_off = selected_params["k_off"]
+k_on = selected_params["k_on"]
+d = selected_params["d"]
+dt_off = d / (k_off * (((voltage / v_off) - 1) ** alpha_off))
+dt_on = d / (k_on * (((-voltage / v_on) - 1) ** alpha_on))
+dt = max(dt_off, -dt_on)/100
+
+print(f"dt_off = {dt_off}")
+print(f"dt_on = {dt_on}")
+print(f"dt = {dt}\n")
 
 # Parameters of the pattern recognition problem
 number_of_features = 2
@@ -58,7 +69,7 @@ tsetlin_machine = XOR.TsetlinMachine(number_of_clauses, number_of_features, stat
                                      selected_params["k_off"],
                                      selected_params["k_on"],
                                      selected_params["d"],
-                                     voltage, dt_off, dt_on)
+                                     voltage, dt, dt)
 tsetlin_machine.print_memristor_states()
 
 # Training of the Tsetlin Machine in batch mode. The Tsetlin Machine can also be trained online
