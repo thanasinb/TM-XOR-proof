@@ -16,18 +16,6 @@ def get_vteam_params(model):
         "k_on" : "-80.0",
         "d" : "(10 * 10 ** -9)"
         }, 
-        "Yalon2012mod" : {
-        "description" : "HfO2 Yalon 2012",
-        "alpha_off" : "1.0",
-        "alpha_on" : "3.0",
-        "v_off" : "0.5",
-        "v_on" : "-0.53",
-        "r_off" : "2.5 * (10 ** 3)",
-        "r_on" : "100.0",
-        "k_off" : "40.30 * (10 ** -9)",
-        "k_on" : "-80.0",
-        "d" : "(10 * 10 ** -9)"
-        }, 
         "Ho2017" : {
         "description": "HfO2 Ho 2017",
         "alpha_off" : "2.0",
@@ -39,7 +27,43 @@ def get_vteam_params(model):
         "k_off" : "28.92 * (10 ** -9)",
         "k_on" : "-198.72 * (10 ** -3)",
         "d" : "(10 * 10 ** -9)"
-        }
+        },
+        "Campbell2017" : {
+        "description": "Ag/SnSe/Ge2Se3 Campbell 2017",
+        "alpha_off" : "1.0",
+        "alpha_on" : "1.0",
+        "v_off" : "90 * (10 ** -3)",
+        "v_on" : "-150 * (10 ** -3)",
+        "r_off" : "150 * (10 ** 3)",
+        "r_on" : "1400.0",
+        "k_off" : "11.27",
+        "k_on" : "-5.74 * (10 ** -3)",
+        "d" : "((1/1000) * 10 ** -9)"
+        },
+        "Oblea2010" : {
+        "description" : "Ag/Ag2Se/Ge2Se3 Oblea 2010",
+        "alpha_off" : "3.0",
+        "alpha_on" : "3.0",
+        "v_off" : "160 * (10 ** -3)",
+        "v_on" : "-150 * (10 ** -3)",
+        "r_off" : "1070.0",
+        "r_on" : "387.0",
+        "k_off" : "2.49 * (10 ** -6)",
+        "k_on" : "-220 * (10 ** -6)",
+        "d" : "(10 * 10 ** -9)"
+        },
+        "template" : {
+        "description" : "",
+        "alpha_off" : "",
+        "alpha_on" : "",
+        "v_off" : "",
+        "v_on" : "",
+        "r_off" : "",
+        "r_on" : "",
+        "k_off" : "",
+        "k_on" : "",
+        "d" : ""
+        } 
     }
     """
 
