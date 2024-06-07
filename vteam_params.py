@@ -52,6 +52,18 @@ def get_vteam_params(model):
         "k_on" : "-220 * (10 ** -6)",
         "d" : "(10 * 10 ** -9)"
         },
+        "Linear1.2" : {
+        "description" : "Linear model, operating voltage 1.2",
+        "alpha_off" : "1.0",
+        "alpha_on" : "1.0",
+        "v_off" : "0.6",
+        "v_on" : "-0.6",
+        "r_off" : "10000.0",
+        "r_on" : "1000.0",
+        "k_off" : "1.0",
+        "k_on" : "-1.0",
+        "d" : "0.5"
+        },
         "template" : {
         "description" : "",
         "alpha_off" : "",

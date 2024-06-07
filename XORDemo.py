@@ -24,7 +24,7 @@ Th = 1
 init_memristor_state = 0.5
 voltage = 1.2
 
-selected_params = vteam_params.get_vteam_params("Campbell2017")
+selected_params = vteam_params.get_vteam_params("Linear1.2")
 alpha_off = selected_params["alpha_off"]
 alpha_on = selected_params["alpha_on"]
 v_off = selected_params["v_off"]
@@ -60,16 +60,10 @@ y_test = Y[NoOfTrainingSamples:NoOfTrainingSamples+NoOfTestingSamples] # Target 
 # This is a multiclass variant of the Tsetlin Machine, capable of distinguishing between multiple classes
 tsetlin_machine = XOR.TsetlinMachine(number_of_clauses, number_of_features, states, s, T, Th,
                                      init_memristor_state,
-                                     selected_params["alpha_off"],
-                                     selected_params["alpha_on"],
-                                     selected_params["v_off"],
-                                     selected_params["v_on"],
+                                     alpha_off, alpha_on, v_off, v_on,
                                      selected_params["r_off"],
                                      selected_params["r_on"],
-                                     selected_params["k_off"],
-                                     selected_params["k_on"],
-                                     selected_params["d"],
-                                     voltage, dt, dt)
+                                     k_off, k_on, d, voltage, dt, dt)
 tsetlin_machine.print_memristor_states()
 
 # Training of the Tsetlin Machine in batch mode. The Tsetlin Machine can also be trained online
