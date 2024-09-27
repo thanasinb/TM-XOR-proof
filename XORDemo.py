@@ -24,7 +24,7 @@ Th = 1
 init_memristor_state = 0.5
 voltage = 1.2
 
-selected_params = vteam_params.get_vteam_params("Linear1.2")
+selected_params = vteam_params.get_vteam_params("Linear12")
 alpha_off = selected_params["alpha_off"]
 alpha_on = selected_params["alpha_on"]
 v_off = selected_params["v_off"]
