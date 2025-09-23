@@ -300,7 +300,7 @@ cdef class TsetlinMachine:
 				
 		Xi = np.zeros((self.number_of_features,), dtype=np.int32)
 		
-		random_index = np.arange(number_of_examples)
+		random_index = np.arange(number_of_examples, dtype=np.int32)
 
 		for epoch in xrange(epochs):	
 			#np.random.shuffle(random_index)
