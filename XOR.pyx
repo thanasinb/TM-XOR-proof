@@ -196,9 +196,18 @@ cdef class TsetlinMachine:
 				action_include = self.action(self.memristors[j,k,0].get_ta_state())
 				action_include_negated = self.action(self.memristors[j,k,1].get_ta_state())
 
+				print(f"state[clause={j},feature={k},0], action_include, X[{k}] = {self.memristors[j,k,0].get_ta_state()}, {action_include}, {X[k]}")
+				print(f"state[clause={j},feature={k},1], action_include_neg, X[{k}] = {self.memristors[j,k,1].get_ta_state()}, {action_include_negated}, {X[k]}")
+
 				if (action_include == 1 and X[k] == 0) or (action_include_negated == 1 and X[k] == 1):
+					if (action_include == 1 and X[k] == 0):
+						print(f"break: action_include == 1 and X[{k}] == 0")
+					if (action_include_negated == 1 and X[k] == 1):
+						print(f"break: action_include_negated == 1 and X[{k}] == 1")
 					self.clause_output[j] = 0
 					break
+			print(f"clause_output[{j}] = {self.clause_output[j]}")
+		print(f"--------")
 
 	###########################################
 	### Predict Target Output y for Input X ###
@@ -416,9 +425,12 @@ cdef class TsetlinMachine:
 			for l in xrange(number_of_examples):
 				example_id = random_index[l]
 				target_class = y[example_id]
-
+				print(f"Method: fit")
+				print(f"Example {example_id} has target class: {target_class}")
 				for j in xrange(self.number_of_features):
 					Xi[j] = X[example_id,j]
+					print(f"Xi[{example_id},{j}]: {X[example_id,j]}")
+				print(f"--------")
 				self.update(Xi, target_class)
 
 		#self.close_csv()

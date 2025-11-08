@@ -8,12 +8,16 @@ import pyximport; pyximport.install(setup_args={
 import XOR
 import vteam_params
 
-X = np.random.randint(2, size=(10000,2), dtype=np.int32)
-Y = np.ones([10000]).astype(dtype=np.int32)
+X = np.random.randint(2, size=(2,2), dtype=np.int32)
+Y = np.ones([2]).astype(dtype=np.int32)
 
-for i in range(10000):
+print("Dataset:")
+for i in range(2):
     if X[i,0] == X[i,1]:
         Y[i] = 0
+    print(f"X[{i}] = {X[i,0]}, {X[i,1]}, {Y[i]}")
+print("--------")
+
 # Parameters for the Tsetlin Machine
 T = 1
 s = 3.9
@@ -36,15 +40,15 @@ dt_off = d / (k_off * (((voltage / v_off) - 1) ** alpha_off))
 dt_on = d / (k_on * (((-voltage / v_on) - 1) ** alpha_on))
 dt = max(dt_off, -dt_on)/100
 
-print(f"dt_off = {dt_off}")
-print(f"dt_on = {dt_on}")
-print(f"dt = {dt}\n")
+# print(f"dt_off = {dt_off}")
+# print(f"dt_on = {dt_on}")
+# print(f"dt = {dt}\n")
 
 # Parameters of the pattern recognition problem
 number_of_features = 2
 
 # Training configuration
-epochs = 200
+epochs = 1
 
 # Loading of training and test data
 NoOfTrainingSamples = len(X)*80//100
@@ -64,12 +68,12 @@ tsetlin_machine = XOR.TsetlinMachine(number_of_clauses, number_of_features, stat
                                      selected_params["r_off"],
                                      selected_params["r_on"],
                                      k_off, k_on, d, voltage, dt, dt)
-tsetlin_machine.print_memristor_states()
+# tsetlin_machine.print_memristor_states()
 
 # Training of the Tsetlin Machine in batch mode. The Tsetlin Machine can also be trained online
 tsetlin_machine.fit(X_training, y_training, y_training.shape[0], epochs=epochs)
 print(f"\n")
-tsetlin_machine.print_memristor_states()
+# tsetlin_machine.print_memristor_states()
 
 # Some performacne statistics
 

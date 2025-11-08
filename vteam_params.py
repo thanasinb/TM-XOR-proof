@@ -85,7 +85,7 @@ def get_vteam_params(model):
     for key in selected_params:
         if key != "description":
             selected_params[key] = float(sympy.sympify(selected_params[key]))
-        print(f"{key}:{selected_params[key]}")
-    print(f"\n")
+        # print(f"{key}:{selected_params[key]}")
+    # print(f"\n")
 
     return selected_params
