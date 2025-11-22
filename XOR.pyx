@@ -188,6 +188,7 @@ cdef class TsetlinMachine:
 	# Calculate the output of each clause using the actions of each Tsetline Automaton.
 	# Output is stored an internal output array.
 	cdef void calculate_clause_output(self, int[:] X):
+		print(f"Method: calculate_clause_output")
 		cdef int j, k
 
 		for j in xrange(self.number_of_clauses):				
@@ -247,19 +248,25 @@ cdef class TsetlinMachine:
 
 	# Sum up the votes for each output decision (y=0 or y = 1)
 	cdef int sum_up_clause_votes(self):
+		print(f"Method: sum_up_clause_votes")
 		cdef int output_sum
 		cdef int j
 
 		output_sum = 0
 		for j in xrange(self.number_of_clauses):
 			output_sum += self.clause_output[j]*self.clause_sign[j]
-		
+			print(f"clause_output[{j}] x clause_sign[{j}]= {self.clause_output[j]} x {self.clause_sign[j]}, output_sum = {output_sum}")
+
 		if output_sum > self.threshold:
 			output_sum = self.threshold
-		
+			print(f"output_sum > threshold, output_sum: {output_sum}")
+
 		elif output_sum < self.Th:
 			output_sum = 0
+			print(f"output_sum < Th, output_sum: {output_sum}")
 
+		print(f"final output_sum: {output_sum}")
+		print(f"--------")
 		return output_sum
 
 	############################################
@@ -307,6 +314,7 @@ cdef class TsetlinMachine:
 	# Use this method directly for online and incremental training.
 
 	cpdef void update(self, int[:] X, int y):
+		print(f"Method: update")
 		cdef int i, j
 		cdef int action_include, action_include_negated
 		cdef int output_sum
@@ -326,29 +334,37 @@ cdef class TsetlinMachine:
 		#####################################
 		### Calculate Feedback to Clauses ###
 		#####################################
-
+		print(f"Return: update")
 		# Initialize feedback to clauses
 		for j in xrange(self.number_of_clauses):
 			self.feedback_to_clauses[j] = 0
 
+		# If target class (y) = 1
 		if y == 1:
 			# Calculate feedback to clauses
 			for j in xrange(self.number_of_clauses):
+				# Random: feedback or not
 				if 1.0*rand()/RAND_MAX > 1.0*(self.threshold - output_sum)/(2*self.threshold):
+					print(f"target class: {y}, ignore feedback, feedback_to_clauses[{j}] = {self.feedback_to_clauses[j]}")
 					continue
 
 				if self.clause_sign[j] > 0:
 					# Type I Feedback				
 					self.feedback_to_clauses[j] += 1
+					print(f"target class: {y}, active feedback, feedback_to_clauses[{j}] = {self.feedback_to_clauses[j]}")
 
+		# If target class (y) = 0
 		elif y == 0:
 			for j in xrange(self.number_of_clauses):
+				# Random: feedback or not
 				if 1.0*rand()/RAND_MAX > 1.0*(self.threshold + output_sum)/(2*self.threshold):
+					print(f"target class: {y}, ignore feedback, feedback_to_clauses[{j}] = {self.feedback_to_clauses[j]}")
 					continue
 
 				if self.clause_sign[j] > 0:
 					# Type II Feedback
 					self.feedback_to_clauses[j] -= 1
+					print(f"target class: {y}, active feedback, feedback_to_clauses[{j}] = {self.feedback_to_clauses[j]}")
 
 	
 		for j in xrange(self.number_of_clauses):
@@ -429,7 +445,7 @@ cdef class TsetlinMachine:
 				print(f"Example {example_id} has target class: {target_class}")
 				for j in xrange(self.number_of_features):
 					Xi[j] = X[example_id,j]
-					print(f"Xi[{example_id},{j}]: {X[example_id,j]}")
+					print(f"Example {example_id}, feature {j}: {X[example_id,j]}")
 				print(f"--------")
 				self.update(Xi, target_class)
 
