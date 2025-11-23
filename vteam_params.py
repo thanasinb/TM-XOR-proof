@@ -4,6 +4,30 @@ import sympy
 def get_vteam_params(model):
     json_vteam_params = """ 
     {
+        "Ali2021" : {
+        "description" : "HfOx",
+        "alpha_off" : "3",
+        "alpha_on" : "3",
+        "v_off" : "0.16",
+        "v_on" : "-0.16",
+        "r_off" : "2 * (10 ** 5)",
+        "r_on" : "1 * (10 ** 3)",
+        "k_off" : "0.0162",
+        "k_on" : "-0.0162",
+        "d" : "3 * (10 ** -9)"
+        }, 
+        "Seiler2024" : {
+        "description" : "Knowm",
+        "alpha_off" : "3",
+        "alpha_on" : "3",
+        "v_off" : "0.7",
+        "v_on" : "-1 * (10 ** -2)",
+        "r_off" : "1 * (10 ** 6)",
+        "r_on" : "1 * (10 ** 4)",
+        "k_off" : "1 * (10 ** -2)",
+        "k_on" : "-5 * (10 ** -10)",
+        "d" : "3 * (10 ** -9)"
+        }, 
         "Yalon2012" : {
         "description" : "HfO2 Yalon 2012",
         "alpha_off" : "1.0",
