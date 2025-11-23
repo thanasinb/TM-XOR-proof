@@ -8,11 +8,12 @@ import pyximport; pyximport.install(setup_args={
 import XOR
 import vteam_params
 
-X = np.random.randint(2, size=(2,2), dtype=np.int32)
-Y = np.ones([2]).astype(dtype=np.int32)
+NoOfTrainingSamples = 10000
+X = np.random.randint(2, size=(NoOfTrainingSamples,2), dtype=np.int32)
+Y = np.ones([NoOfTrainingSamples]).astype(dtype=np.int32)
 
 print("Dataset:")
-for i in range(2):
+for i in range(NoOfTrainingSamples):
     if X[i,0] == X[i,1]:
         Y[i] = 0
     print(f"X[{i}] = {X[i,0]}, {X[i,1]}, {Y[i]}")
@@ -28,7 +29,7 @@ Th = 1
 init_memristor_state = 0.5
 voltage = 1.2
 
-selected_params = vteam_params.get_vteam_params("Linear12")
+selected_params = vteam_params.get_vteam_params("Seiler2024")
 alpha_off = selected_params["alpha_off"]
 alpha_on = selected_params["alpha_on"]
 v_off = selected_params["v_off"]
@@ -48,7 +49,7 @@ dt = max(dt_off, -dt_on)/100
 number_of_features = 2
 
 # Training configuration
-epochs = 1
+epochs = 200
 
 # Loading of training and test data
 NoOfTrainingSamples = len(X)*80//100

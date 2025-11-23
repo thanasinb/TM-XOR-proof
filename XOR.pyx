@@ -124,7 +124,7 @@ cdef class TsetlinMachine:
 			else:
 				self.clause_sign[j] = 1
 
-		#self.init_csv()
+		self.init_csv()
 
 	def print_ta_states(self):
 		"""
@@ -418,7 +418,7 @@ cdef class TsetlinMachine:
 						elif X[k] == 1:
 							if action_include_negated == 0 and self.memristors[j,k,1].get_ta_state() < self.number_of_states*2:
 								self.memristors[j,k,1].tune(self.voltage, self.dt_off)
-		#self.append_csv()
+		self.append_csv()
 
 	##############################################
 	### Batch Mode Training of Tsetlin Machine ###
@@ -449,5 +449,5 @@ cdef class TsetlinMachine:
 				print(f"--------")
 				self.update(Xi, target_class)
 
-		#self.close_csv()
+		self.close_csv()
 		return
