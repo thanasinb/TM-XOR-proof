@@ -18,11 +18,7 @@ cdef class Model1T1M:
                  int feature,
                  int negated,
 				 float rt_off,
-                 float rt_on,
-                 float dt_off,
-                 float dt_on,
-                 float voltage,
-                 float rm):
+                 float rt_on):
 
         self.ta_state = ta_state
         self.init_memristor_state = init_memristor_state
@@ -39,32 +35,30 @@ cdef class Model1T1M:
         self.dx = 0
         self.rt_off = rt_off
         self.rt_on = rt_on
-        self.dt_off = dt_off
-        self.dt_on = dt_on
-        self.voltage = voltage
-        self.rm = rm
         self.delta_rm_off = 0
         self.delta_rm_2_off = 0
         self.delta_rm_on = 0
         self.delta_rm_2_on = 0
 
         self.mr_state = (ta_state/self.number_of_states)*self.init_memristor_state
-        self.x = self.mr_state * self.d
+        self.rm = (self.r_off * self.mr_state) + (self.r_on * (1 - self.mr_state))
+        # self.x = self.mr_state * self.d
 
         self.delta_rm_1 = (r_off - r_on) / d
-        self.delta_rm_3_off = k_off * dt_off
-        self.delta_rm_3_on = k_on * dt_on
 
-    def tune(self, int off=0, int on=0):
-        if off == 1:
-            self.delta_rm_2_off = ((((self.rm * self.voltage) / (self.rm + self.rt_off)) / self.v_off) - 1) ** self.alpha_off
-            self.delta_rm_off = self.delta_rm_1 * self.delta_rm_2_off * self.delta_rm_3_off
+    def tune(self, float voltage, float dt):
+        if voltage > self.v_off:
+            self.delta_rm_3 = self.k_off * dt
+            self.delta_rm_2_off = ((((self.rm * voltage) / (self.rm + self.rt_off)) / self.v_off) - 1) ** self.alpha_off
+            self.delta_rm_off = self.delta_rm_1 * self.delta_rm_2_off * self.delta_rm_3
             self.rm += self.delta_rm_off
             self.dx = self.delta_rm_off
 
-        elif on == 1:
-            self.delta_rm_2_on = ((((self.rm * self.voltage) / (self.rm + self.rt_on)) / self.v_on) - 1) ** self.alpha_on
-            self.delta_rm_on = self.delta_rm_1 * self.delta_rm_2_on * self.delta_rm_3_on
+        elif voltage < self.v_on:
+            voltage = -voltage
+            self.delta_rm_3 = self.k_on * dt
+            self.delta_rm_2_on = ((((self.rm * voltage) / (self.rm + self.rt_on)) / self.v_on) - 1) ** self.alpha_on
+            self.delta_rm_on = self.delta_rm_1 * self.delta_rm_2_on * self.delta_rm_3
             self.rm -= self.delta_rm_on
             self.dx = self.delta_rm_on
 

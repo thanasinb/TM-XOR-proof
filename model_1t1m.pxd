@@ -11,22 +11,17 @@ cdef class Model1T1M:
     cdef float k_off
     cdef float k_on
     cdef float d
-    cdef float x
     cdef float dx
     cdef int clause
     cdef int feature
     cdef int negated
     cdef float rt_off
     cdef float rt_on
-    cdef float dt_off
-    cdef float dt_on
-    cdef float voltage
     cdef float rm
     cdef float delta_rm_1
     cdef float delta_rm_off
     cdef float delta_rm_2_off
     cdef float delta_rm_on
     cdef float delta_rm_2_on
-    cdef float delta_rm_3_off
-    cdef float delta_rm_3_on
+    cdef float delta_rm_3
     cdef float mr_state

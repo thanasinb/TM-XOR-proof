@@ -27,7 +27,8 @@ import numpy as np
 cimport numpy as np
 import random
 from libc.stdlib cimport rand, RAND_MAX
-from memristor cimport Memristor
+# from memristor cimport Memristor
+from model_1t1m cimport Model1T1M
 import csv
 import os
 
@@ -49,7 +50,7 @@ cdef class TsetlinMachine:
 	cdef int[:] clause_output
 	cdef int[:] feedback_to_clauses
 
-	cdef Memristor[:,:,:] memristors
+	cdef Model1T1M[:,:,:] memristors
 	cdef float init_memristor_state
 	cdef float alpha_off
 	cdef float alpha_on
@@ -63,6 +64,8 @@ cdef class TsetlinMachine:
 	cdef float voltage
 	cdef float dt_off
 	cdef float dt_on
+	cdef float rt_off
+	cdef float rt_on
 
 	mycsv = {}
 	csvwriter = {}
@@ -70,7 +73,7 @@ cdef class TsetlinMachine:
 	# Initialization of the Tsetlin Machine
 	def __init__(self, number_of_clauses, number_of_features, number_of_states, s, threshold, Th,
 				 init_memristor_state, alpha_off, alpha_on, v_off, v_on, r_off, r_on, k_off, k_on, d,
-				 voltage, dt_off, dt_on):
+				 voltage, dt_off, dt_on, rt_off, rt_on):
 		cdef int j
 
 		self.number_of_clauses = number_of_clauses
@@ -92,6 +95,8 @@ cdef class TsetlinMachine:
 		self.voltage = voltage
 		self.dt_off = dt_off
 		self.dt_on = dt_on
+		self.rt_off = rt_off
+		self.rt_on = rt_on
 
 		# The state of each Tsetlin Automaton is stored here. The automata are randomly initialized to either 'number_of_states' or 'number_of_states' + 1.
 		self.ta_state = np.random.choice([self.number_of_states, self.number_of_states+1], size=(self.number_of_clauses, self.number_of_features, 2)).astype(dtype=np.int32)
@@ -100,7 +105,7 @@ cdef class TsetlinMachine:
 		for a in range(self.number_of_clauses):
 			for b in range(self.number_of_features):
 				for c in range(2):
-					self.memristors[a, b, c] = Memristor(self.ta_state[a, b, c],
+					self.memristors[a, b, c] = Model1T1M(self.ta_state[a, b, c],
                                                          init_memristor_state,
                                                          number_of_states,
 														 self.alpha_off,
@@ -112,7 +117,9 @@ cdef class TsetlinMachine:
 														 self.k_off,
                                                          self.k_on,
 														 self.d,
-                                                         a, b, c)
+                                                         a, b, c,
+                                                         self.rt_off,
+                                                         self.rt_on)
 
 		# int ta_state, float init_memristor_state, int number_of_states,
 		# float alpha_off, float alpha_on, float v_off, float v_on, float r_off, float r_on, float k_off, float k_on, float d

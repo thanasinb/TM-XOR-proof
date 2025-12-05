@@ -48,16 +48,12 @@ my_1t1m = Model1T1M(ta_state,
                     feature,
                     negated,
                     rt_off,
-                    rt_on,
-                    dt_off,
-                    dt_on,
-                    voltage,
-                    rm)
+                    rt_on)
 
 for i in range(100):
-    my_1t1m.tune(1,0)
+    my_1t1m.tune(voltage, dt_off)
     print(i+1, my_1t1m.get_mr_xdx())
 
 for i in range(100):
-    my_1t1m.tune(0,1)
+    my_1t1m.tune(-voltage, dt_on)
     print(i+1, my_1t1m.get_mr_xdx())
