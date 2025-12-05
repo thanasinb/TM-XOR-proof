@@ -100,12 +100,19 @@ cdef class TsetlinMachine:
 		for a in range(self.number_of_clauses):
 			for b in range(self.number_of_features):
 				for c in range(2):
-					self.memristors[a, b, c] = Memristor(self.ta_state[a, b, c], init_memristor_state, number_of_states,
-														 self.alpha_off, self.alpha_on,
-														 self.v_off, self.v_on,
-														 self.r_off, self.r_on,
-														 self.k_off, self.k_on,
-														 self.d, a, b, c)
+					self.memristors[a, b, c] = Memristor(self.ta_state[a, b, c],
+                                                         init_memristor_state,
+                                                         number_of_states,
+														 self.alpha_off,
+                                                         self.alpha_on,
+														 self.v_off,
+                                                         self.v_on,
+														 self.r_off,
+                                                         self.r_on,
+														 self.k_off,
+                                                         self.k_on,
+														 self.d,
+                                                         a, b, c)
 
 		# int ta_state, float init_memristor_state, int number_of_states,
 		# float alpha_off, float alpha_on, float v_off, float v_on, float r_off, float r_on, float k_off, float k_on, float d
